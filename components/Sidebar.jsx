@@ -1,9 +1,36 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  AiOutlineCalendar,
+  AiOutlineDashboard,
+  AiOutlineDollar,
+  AiOutlineUser,
+} from "react-icons/ai";
 
+import { TbUserShare } from "react-icons/tb";
+// Array of links
+const links = [
+  { name: "Dashboard", icon: AiOutlineDashboard, href: "/" },
+  { name: "Employees", icon: AiOutlineUser, href: "/employees" },
+  { name: "Payouts", icon: AiOutlineDollar, href: "/payouts" },
+  { name: "Leaves", icon: TbUserShare, href: "/leaves" },
+  { name: "Calendar", icon: AiOutlineCalendar, href: "/calendar" },
+  // Add more links here
+];
 const Sidebar = ({ isOpen, setIsOpen }) => {
+  const pathname = usePathname();
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
+  };
+
+  const startNavigation = (event, href) => {
+    if (event.ctrlKey) return;
+    if (pathname === href) return;
+    const progressBarElement = document.getElementById("progressbar");
+    progressBarElement.classList.add("duration-[10000ms]");
+    progressBarElement.classList.add("w-[90%]");
   };
 
   return (
@@ -45,31 +72,29 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </svg>
           </button>
         </div>
-
-        {/* Sidebar links */}
         <nav className="p-4">
           <ul>
-            <li className="mb-4">
-              <a href="#" className="text-gray-700 hover:text-white">
-                Link 1
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="text-gray-700 hover:text-white">
-                Link 2
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="text-gray-700 hover:text-white">
-                Link 3
-              </a>
-            </li>
-            {/* Add more sidebar links */}
+            {links.map((link, index) => (
+              <li key={index} className="">
+                <Link
+                  href={link.href}
+                  className={`${
+                    pathname === link.href ? " bg-slate-200" : ""
+                  } flex items-center py-2 px-2 rounded`}
+                  onClick={(e) => {
+                    startNavigation(e, link.href);
+                    toggleSidebar();
+                  }}
+                >
+                  <link.icon className="inline-block text-2xl mr-2" />
+                  {link.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
       </div>
     </div>
   );
 };
-
 export default Sidebar;

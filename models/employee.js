@@ -1,13 +1,11 @@
-import { Schema, model, models } from "mongoose";
-
 const EmployeeSchema = new Schema({
   fullName: {
-    type: "string",
+    type: String,
     required: [true, "Employee Full Name is required."],
   },
   email: {
     type: String,
-    required: [true, "email is required."],
+    required: [true, "Email is required."],
   },
   designation: {
     type: Schema.Types.ObjectId,
@@ -19,23 +17,33 @@ const EmployeeSchema = new Schema({
   },
   joiningDate: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
   salary: {
     type: Number,
-    required: [true, "Salary is required."],
+    required: [true, "Salary is required and must be a numerical value."],
   },
   bankAccount: {
-    type: String,
-    required: [true, "Bank account number is required."],
+    accountNumber: {
+      type: String,
+      required: [true, "Bank account number is required."],
+    },
+    accountName: {
+      type: String,
+      required: [true, "Bank account name is required."],
+    },
+    branch: {
+      type: String,
+      required: [true, "Branch information is required."],
+    },
   },
   taxInformation: {
     type: String,
     required: [true, "Tax information is required."],
   },
   allowances: {
-    type: String,
-    required: [true, "Allowances is required."],
+    type: Number,
+    required: [true, "Allowances is required and must be a numerical value."],
   },
   address: {
     type: String,

@@ -9,11 +9,13 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 
+import { LiaUserEditSolid } from "react-icons/lia";
 import { TbUserShare } from "react-icons/tb";
 // Array of links
 const links = [
   { name: "Dashboard", icon: AiOutlineDashboard, href: "/" },
   { name: "Employees", icon: AiOutlineUser, href: "/employees" },
+  { name: "Attendance", icon: LiaUserEditSolid, href: "/attendance" },
   { name: "Payouts", icon: AiOutlineDollar, href: "/payouts" },
   { name: "Leaves", icon: TbUserShare, href: "/leaves" },
   { name: "Calendar", icon: AiOutlineCalendar, href: "/calendar" },

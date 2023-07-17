@@ -15,7 +15,6 @@ const DashboardLayout = ({ children }) => {
   });
 
   useNavigationEvent(() => {
-    console.log("Progress bar changing");
     const progressBarElement = document.getElementById("progressbar");
     progressBarElement.classList.add("w-full");
     progressBarElement.classList.remove("duration-[10000ms]");

@@ -11,10 +11,21 @@ import {
 
 import { LiaUserEditSolid } from "react-icons/lia";
 import { TbUserShare } from "react-icons/tb";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 // Array of links
 const links = [
   { name: "Dashboard", icon: AiOutlineDashboard, href: "/" },
-  { name: "Employees", icon: AiOutlineUser, href: "/employees" },
+  {
+    name: "Employee",
+    icon: AiOutlineUser,
+    submenu: [
+      { name: "Designation", href: "/employee/designation" },
+      { name: "Add Employee", href: "/employee/add" },
+      { name: "Manage Employee", href: "/employee/manage" },
+    ],
+  },
   { name: "Attendance", icon: LiaUserEditSolid, href: "/attendance" },
   { name: "Payouts", icon: AiOutlineDollar, href: "/payouts" },
   { name: "Leaves", icon: TbUserShare, href: "/leaves" },
@@ -35,6 +46,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     progressBarElement.classList.add("w-[90%]");
   };
 
+  const findActiveSubmenu = links.findIndex((l) => {
+    const pathArray = l?.submenu?.map((e) => e.href) || [];
+    return pathArray?.includes(pathname);
+  });
+
+  const [expanded, setExpanded] = useState(
+    findActiveSubmenu === -1 ? 0 : findActiveSubmenu
+  );
   return (
     <div
       className={`${
@@ -78,19 +97,32 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
           <ul>
             {links.map((link, index) => (
               <li key={index} className="">
-                <Link
-                  href={link.href}
-                  className={`${
-                    pathname === link.href ? " bg-slate-200" : ""
-                  } flex items-center py-2 px-2 rounded`}
-                  onClick={(e) => {
-                    startNavigation(e, link.href);
-                    toggleSidebar();
-                  }}
-                >
-                  <link.icon className="inline-block text-2xl mr-2" />
-                  {link.name}
-                </Link>
+                {link.href ? (
+                  <Link
+                    href={link.href}
+                    className={`${
+                      pathname === link.href && !expanded ? " bg-slate-300" : ""
+                    } flex items-center py-2 px-2 rounded duration-300`}
+                    onClick={(e) => {
+                      startNavigation(e, link.href);
+                      toggleSidebar();
+                      setExpanded(false);
+                    }}
+                  >
+                    <link.icon className="inline-block text-2xl mr-2" />
+                    {link.name}
+                  </Link>
+                ) : (
+                  <Accordion
+                    i={index}
+                    expanded={expanded}
+                    setExpanded={setExpanded}
+                    link={link}
+                    pathname={pathname}
+                    startNavigation={startNavigation}
+                    toggleSidebar={toggleSidebar}
+                  />
+                )}
               </li>
             ))}
           </ul>
@@ -100,3 +132,71 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   );
 };
 export default Sidebar;
+
+const Accordion = ({
+  i,
+  expanded,
+  setExpanded,
+  link,
+  pathname,
+  startNavigation,
+  toggleSidebar,
+}) => {
+  const isOpen = i === expanded;
+
+  // By using `AnimatePresence` to mount and unmount the contents, we can animate
+  // them in and out while also only rendering the contents of open accordions
+  return (
+    <div className="overflow-hidden">
+      <motion.div
+        initial={false}
+        // animate={{ backgroundColor: isOpen ? "#FF0088" : "#0055FF" }}
+        onClick={() => setExpanded(isOpen ? false : i)}
+        className={`flex items-center py-2 px-2 rounded cursor-pointer ${
+          expanded && " bg-slate-200"
+        }`}
+      >
+        <link.icon className="inline-block text-2xl mr-2" />
+        {link.name}
+      </motion.div>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.section
+            key="content"
+            initial="collapsed"
+            animate="open"
+            exit="collapsed"
+            variants={{
+              open: { opacity: 1, height: "auto" },
+              collapsed: { opacity: 1, height: 0 },
+            }}
+            transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
+            className="flex flex-col ml-4 "
+          >
+            {link.submenu.map((subLink, index) => (
+              <div
+                key={index}
+                className="flex items-center border-l-2 border-slate-200"
+              >
+                <div className="w-2 border-b-2 border-slate-200"></div>
+                <Link
+                  href={subLink.href}
+                  className={`${
+                    pathname === subLink.href ? " bg-slate-300" : ""
+                  } flex items-center py-1.5 pl-3 rounded flex-1`}
+                  onClick={(e) => {
+                    startNavigation(e, link.href);
+                    toggleSidebar();
+                  }}
+                >
+                  {subLink.name}
+                </Link>
+              </div>
+            ))}
+          </motion.section>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};

@@ -8,24 +8,44 @@
   color: #0e172699;
 }
 
-css .progress-bar {
-  width: 100%;
-  height: 20px;
-  background-color: #f2f2f2;
-  border-radius: 10px;
-  overflow: hidden;
+.orange_gradient {
+  @apply bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent;
 }
-.progress {
-  width: 0%;
-  height: 20px;
-  background-color: #4caf50;
-  animation: progressAnimation 4s linear forwards;
+
+.green_gradient {
+  @apply bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent;
 }
-@keyframes progressAnimation {
-  0% {
-    width: 0%;
-  }
-  100% {
-    width: 90%;
-  }
+
+.blue_gradient {
+  @apply bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent;
 }
+
+.bg_orange_gradient {
+  @apply bg-gradient-to-r from-amber-500 to-yellow-500;
+}
+
+.bg_green_gradient {
+  @apply bg-gradient-to-r from-green-400 to-green-500;
+}
+
+.bg_blue_gradient {
+  @apply bg-gradient-to-r from-blue-600 to-cyan-600;
+}
+.bg_red_gradient {
+  @apply bg-gradient-to-r from-red-600 to-pink-600;
+}
+
+.btn_green{
+  @apply bg-gradient-to-r from-green-400 to-green-500 px-3 py-2 rounded text-white shadow-lg shadow-green-400/70
+}
+.btn_red{
+  @apply bg-gradient-to-r from-red-500 to-pink-600 px-5 py-2 rounded text-white shadow-lg shadow-red-400/70 
+}
+
+.outline_btn_red {
+  @apply rounded border border-red-500 bg-transparent py-1.5 px-5 text-red-500 transition-all hover:bg-red-500 hover:text-white text-center flex items-center justify-center;
+}
+.btn_blue{
+  @apply bg-gradient-to-r from-blue-500 to-blue-600 px-5 py-2 rounded text-white shadow-lg shadow-blue-400/70
+}
+

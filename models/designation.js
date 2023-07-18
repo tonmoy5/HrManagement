@@ -1,13 +1,13 @@
 import { Schema, model, models } from "mongoose";
 
 const DesignationSchema = new Schema({
-  name: {
+  title: {
     type: String,
-    required: [true, "Designation name is required."],
+    required: [true, "Designation title is required."],
   },
-  description: {
+  details: {
     type: String,
-    required: [true, "Designation description is required."],
+    required: [true, "Designation details is required."],
   },
 });
 

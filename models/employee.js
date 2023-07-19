@@ -1,3 +1,5 @@
+import { Schema, model, models } from "mongoose";
+
 const EmployeeSchema = new Schema({
   fullName: {
     type: String,

@@ -17,12 +17,12 @@ const Nav = ({ isOpen, setIsOpen }) => {
   });
 
   return (
-    <div className="h-[64px] bg-white shadow flex items-center justify-between px-5">
+    <div className="h-[64px] bg-white shadow flex items-center justify-between px-5 fixed top-0 left-0 w-full z-10">
       {/* Sidebar toggle button */}
       <div className="flex gap-3 items-center">
         {!isOpen && (
           <button
-            className="lg:hidden focus:outline-none h-[64px] flex items-center"
+            className="md:hidden focus:outline-none h-[64px] flex items-center"
             onClick={() => setIsOpen((prev) => !prev)}
           >
             <svg

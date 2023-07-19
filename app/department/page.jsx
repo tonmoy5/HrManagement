@@ -8,8 +8,8 @@ import { GoPencil } from "react-icons/go";
 import { HiOutlineTrash } from "react-icons/hi";
 import { IoMdAdd } from "react-icons/io";
 
-const Designation = () => {
-  const headers = ["Title", "Details"];
+const Department = () => {
+  const headers = ["Name", "Description"];
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -57,7 +57,7 @@ const Designation = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/designation");
+        const response = await fetch("/api/department");
         const json = await response.json();
         setData(json.data);
       } catch (error) {
@@ -75,6 +75,7 @@ const Designation = () => {
     setIsDeleteModalOpen(false);
     setSelectedRow(null);
   };
+
   const onDeleteSuccess = (row) => {
     setIsDeleteModalOpen(false);
     setSelectedRow(null);
@@ -98,9 +99,9 @@ const Designation = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        title={`${selectedRow ? "Edit" : "Add"} Designation`}
+        title={`${selectedRow ? "Edit" : "Add"} Department`}
       >
-        <DesignationForm
+        <DepartmentForm
           initialData={selectedRow}
           onSubmit={handleUpdateData}
           handleCloseModal={handleCloseModal}
@@ -121,13 +122,13 @@ const Designation = () => {
       />
 
       <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
-        <h1 className="font-bold text-lg blue_gradient w-max">Designations</h1>
+        <h1 className="font-bold text-lg blue_gradient w-max">Departments</h1>
         <button
           onClick={handleOpenModal}
           className="btn_green text-sm flex items-center gap-2"
         >
           <IoMdAdd className="font-bold" />
-          Add Designation
+          Add Department
         </button>
       </div>
 
@@ -137,7 +138,7 @@ const Designation = () => {
         <Table
           headers={headers}
           data={data.map((d) => {
-            return { _id: d._id, title: d.title, details: d.details };
+            return { _id: d._id, name: d.name, description: d.description };
           })}
           actionButtons={actionButtons}
         />
@@ -146,7 +147,7 @@ const Designation = () => {
   );
 };
 
-export default Designation;
+export default Department;
 
 const DeleteModal = ({ row, isModalOpen, handleCloseModal, onSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -157,19 +158,19 @@ const DeleteModal = ({ row, isModalOpen, handleCloseModal, onSuccess }) => {
     setError(null);
 
     try {
-      const response = await fetch(`/api/designation?id=${row._id}`, {
+      const response = await fetch(`/api/department?id=${row._id}`, {
         method: "DELETE",
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete designation.");
+        throw new Error("Failed to delete department.");
       }
 
       // Perform any necessary cleanup or success handling
       onSuccess(row);
     } catch (error) {
-      console.error("Error deleting designation:", error);
-      setError("Failed to delete designation.");
+      console.error("Error deleting department:", error);
+      setError("Failed to delete department.");
     } finally {
       setIsLoading(false);
     }
@@ -179,12 +180,12 @@ const DeleteModal = ({ row, isModalOpen, handleCloseModal, onSuccess }) => {
     <Modal
       isOpen={isModalOpen}
       onClose={handleCloseModal}
-      title={`Delete Designation`}
+      title={`Delete Department`}
     >
       <div>
         <p>
           Are you sure you want to delete "
-          <span className="font-bold">{row?.title}</span>" designation?
+          <span className="font-bold">{row?.name}</span>" department?
         </p>
       </div>
       <div className="flex justify-end gap-3 mb-2 mt-4">
@@ -209,20 +210,20 @@ const DeleteModal = ({ row, isModalOpen, handleCloseModal, onSuccess }) => {
   );
 };
 
-const DesignationForm = ({ initialData, onSubmit, handleCloseModal }) => {
-  const [title, setTitle] = useState("");
-  const [details, setDetails] = useState("");
+const DepartmentForm = ({ initialData, onSubmit, handleCloseModal }) => {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (initialData) {
-      setTitle(initialData.title);
-      setDetails(initialData.details);
+      setName(initialData.name);
+      setDescription(initialData.description);
     }
   }, [initialData]);
 
-  const submitDesignation = async (designationData) => {
+  const submitDepartment = async (departmentData) => {
     setIsLoading(true);
     setError(null);
 
@@ -233,21 +234,21 @@ const DesignationForm = ({ initialData, onSubmit, handleCloseModal }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...designationData,
+          ...departmentData,
           id: initialData ? initialData._id : null,
         }),
       };
 
-      const response = await fetch("/api/designation", requestOptions);
+      const response = await fetch("/api/department", requestOptions);
 
       if (!response.ok) {
-        throw new Error("Failed to submit designation.");
+        throw new Error("Failed to submit department.");
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("Error submitting designation:", error);
+      console.error("Error submitting department:", error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -257,13 +258,13 @@ const DesignationForm = ({ initialData, onSubmit, handleCloseModal }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const designationData = {
-      title,
-      details,
+    const departmentData = {
+      name,
+      description,
     };
 
     try {
-      const response = await submitDesignation(designationData);
+      const response = await submitDepartment(departmentData);
 
       if (response) {
         // Do something with the response data
@@ -271,8 +272,8 @@ const DesignationForm = ({ initialData, onSubmit, handleCloseModal }) => {
       }
     } catch (error) {
       // Error in submission
-      setError("Failed to submit designation.");
-      console.error("Failed to submit designation:", error);
+      setError("Failed to submit department.");
+      console.error("Failed to submit department:", error);
       // Display error message to the user or perform error handling
     }
   };
@@ -280,26 +281,26 @@ const DesignationForm = ({ initialData, onSubmit, handleCloseModal }) => {
   return (
     <form onSubmit={handleFormSubmit} className="space-y-4">
       <div>
-        <label htmlFor="title" className="text-gray-700 font-medium">
-          Title:
+        <label htmlFor="name" className="text-gray-700 font-medium">
+          Name:
         </label>
         <input
           type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          id="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
-          className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border "
+          className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
         />
       </div>
       <div>
-        <label htmlFor="details" className="text-gray-700 font-medium">
-          Details:
+        <label htmlFor="description" className="text-gray-700 font-medium">
+          Description:
         </label>
         <textarea
-          id="details"
-          value={details}
-          onChange={(e) => setDetails(e.target.value)}
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           required
           className="block w-full border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
         />

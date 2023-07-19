@@ -9,7 +9,9 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 
+import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { LiaUserEditSolid } from "react-icons/lia";
+import { MdArrowForwardIos } from "react-icons/md";
 import { TbUserShare } from "react-icons/tb";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -26,7 +28,19 @@ const links = [
       { name: "Manage Employee", href: "/employee/manage" },
     ],
   },
-  { name: "Attendance", icon: LiaUserEditSolid, href: "/attendance" },
+  {
+    name: "Department",
+    icon: HiOutlineOfficeBuilding,
+    href: "/department",
+  },
+  {
+    name: "Attendance",
+    icon: LiaUserEditSolid,
+    submenu: [
+      { name: "Attendance Form", href: "/attendance/form" },
+      { name: "Attendance Log", href: "/attendance/log" },
+    ],
+  },
   { name: "Payouts", icon: AiOutlineDollar, href: "/payouts" },
   { name: "Leaves", icon: TbUserShare, href: "/leaves" },
   { name: "Calendar", icon: AiOutlineCalendar, href: "/calendar" },
@@ -57,11 +71,13 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   return (
     <div
       className={`${
-        isOpen ? "translate-x-0" : "md:translate-x-0 -translate-x-[265px]"
-      } bg-white min-h-screen shadow-2xl absolute top-0 left-0 duration-300 w-[260px]`}
+        isOpen
+          ? "translate-x-0 fixed"
+          : "md:translate-x-0 -translate-x-[265px] md:fixed absolute"
+      } bg-white min-h-screen shadow-2xl top-0 left-0 duration-300 w-[260px] z-20`}
     >
       {/* Sidebar content */}
-      <div className={`lg:block ${isOpen ? "block" : "hidden"}`}>
+      <div className={`md:block ${isOpen ? "block" : "hidden"}`}>
         {/* Sidebar logo */}
         <div className="h-[64px] flex items-center justify-between gap-2 p-4">
           <div className="flex gap-2">
@@ -74,7 +90,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             <h1 className="md:text-xl text-base font-bold ">HR Management</h1>
           </div>
           <button
-            className="block lg:hidden focus:outline-none"
+            className="block md:hidden focus:outline-none"
             onClick={toggleSidebar}
           >
             <svg
@@ -101,7 +117,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   <Link
                     href={link.href}
                     className={`${
-                      pathname === link.href && !expanded ? " bg-slate-300" : ""
+                      pathname === link.href ? " bg-slate-300" : ""
                     } flex items-center py-2 px-2 rounded duration-300`}
                     onClick={(e) => {
                       startNavigation(e, link.href);
@@ -121,6 +137,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     pathname={pathname}
                     startNavigation={startNavigation}
                     toggleSidebar={toggleSidebar}
+                    activeSubmenuIndex={findActiveSubmenu}
                   />
                 )}
               </li>
@@ -141,6 +158,7 @@ const Accordion = ({
   pathname,
   startNavigation,
   toggleSidebar,
+  activeSubmenuIndex,
 }) => {
   const isOpen = i === expanded;
 
@@ -152,12 +170,17 @@ const Accordion = ({
         initial={false}
         // animate={{ backgroundColor: isOpen ? "#FF0088" : "#0055FF" }}
         onClick={() => setExpanded(isOpen ? false : i)}
-        className={`flex items-center py-2 px-2 rounded cursor-pointer ${
-          expanded && " bg-slate-200"
+        className={`flex items-center justify-between py-2 px-2 rounded cursor-pointer ${
+          activeSubmenuIndex === i && " bg-slate-200"
         }`}
       >
-        <link.icon className="inline-block text-2xl mr-2" />
-        {link.name}
+        <div>
+          <link.icon className="inline-block text-2xl mr-2" />
+          {link.name}
+        </div>
+        <MdArrowForwardIos
+          className={`${expanded === i && "rotate-90"} duration-300`}
+        />
       </motion.div>
 
       <AnimatePresence initial={false}>
@@ -186,7 +209,7 @@ const Accordion = ({
                     pathname === subLink.href ? " bg-slate-300" : ""
                   } flex items-center py-1.5 pl-3 rounded flex-1`}
                   onClick={(e) => {
-                    startNavigation(e, link.href);
+                    startNavigation(e, subLink.href);
                     toggleSidebar();
                   }}
                 >

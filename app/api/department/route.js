@@ -1,16 +1,16 @@
-import Employee from "@models/employee";
+import Department from "@models/department";
 import { connectToDB } from "@utils/database";
 
 export const GET = async (req) => {
   try {
     await connectToDB();
-    const employees = await Employee.find({});
+    const departments = await Department.find({});
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Employees retrieved successfully",
-        data: employees,
+        message: "Departments retrieved successfully",
+        data: departments,
       }),
       { status: 200 }
     );
@@ -27,39 +27,20 @@ export const GET = async (req) => {
 };
 
 export const POST = async (req) => {
-  const {
-    fullName,
-    email,
-    designation,
-    department,
-    joiningDate,
-    salary,
-    bankAccount,
-    taxInformation,
-    allowances,
-    address,
-  } = await req.json();
+  const { name, description } = await req.json();
 
   try {
     await connectToDB();
-    const newEmployee = new Employee({
-      fullName,
-      email,
-      designation,
-      department,
-      joiningDate,
-      salary,
-      bankAccount,
-      taxInformation,
-      allowances,
-      address,
+    const newDepartment = new Department({
+      name,
+      description,
     });
-    await newEmployee.save();
+    await newDepartment.save();
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Employee added successfully",
-        data: newEmployee,
+        message: "Department added successfully",
+        data: newDepartment,
       }),
       { status: 201 }
     );
@@ -76,55 +57,35 @@ export const POST = async (req) => {
 };
 
 export const PUT = async (req) => {
-  const {
-    id,
-    fullName,
-    email,
-    designation,
-    department,
-    joiningDate,
-    salary,
-    bankAccount,
-    taxInformation,
-    allowances,
-    address,
-  } = await req.json();
+  const { id, name, description } = await req.json();
 
   try {
     await connectToDB();
 
-    // Find the existing Employee document by ID
-    const existingEmployee = await Employee.findById(id);
-    if (!existingEmployee) {
+    // Find the existing Department document by ID
+    const existingDepartment = await Department.findById(id);
+    if (!existingDepartment) {
       return new Response(
         JSON.stringify({
           success: false,
-          message: "Employee not found",
+          message: "Department not found",
         }),
         { status: 404 }
       );
     }
 
     // Update the fields with the new values
-    existingEmployee.fullName = fullName;
-    existingEmployee.email = email;
-    existingEmployee.designation = designation;
-    existingEmployee.department = department;
-    existingEmployee.joiningDate = joiningDate;
-    existingEmployee.salary = salary;
-    existingEmployee.bankAccount = bankAccount;
-    existingEmployee.taxInformation = taxInformation;
-    existingEmployee.allowances = allowances;
-    existingEmployee.address = address;
+    existingDepartment.name = name;
+    existingDepartment.description = description;
 
     // Save the updated document
-    const updatedEmployee = await existingEmployee.save();
+    const updatedDepartment = await existingDepartment.save();
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Employee updated successfully",
-        data: updatedEmployee,
+        message: "Department updated successfully",
+        data: updatedDepartment,
       }),
       { status: 200 }
     );
@@ -147,13 +108,13 @@ export const DELETE = async (req) => {
 
   try {
     await connectToDB();
-    await Employee.findByIdAndDelete(id);
+    await Department.findByIdAndDelete(id);
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Employee deleted successfully!",
+        message: "Department deleted successfully!",
       }),
-      { status: 200 }
+      { status: 201 }
     );
   } catch (error) {
     console.log(error);

@@ -36,13 +36,13 @@ const Table = ({ headers, data, actionButtons }) => {
                   {Object.values(rest).map((cell, cellIndex) => (
                     <td
                       key={cellIndex}
-                      className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
+                      className="px-2 py-4 text-sm text-gray-500 whitespace-nowrap mt-2"
                     >
                       {cell}
                     </td>
                   ))}
                   {actionButtons && actionButtons.length > 0 && (
-                    <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                    <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap mt-2">
                       {actionButtons.map((button, buttonIndex) => (
                         <button
                           key={buttonIndex}
@@ -66,7 +66,7 @@ const Table = ({ headers, data, actionButtons }) => {
           {data.map((row, rowIndex) => {
             const { _id, ...rest } = row;
             return (
-              <div key={rowIndex} className="py-4 px-6">
+              <div key={rowIndex} className="py-4 px-2">
                 <div className="text-sm text-gray-500 whitespace-nowrap">
                   <div className="font-bold">SR</div>
                   <div>{rowIndex + 1}</div>
@@ -74,14 +74,14 @@ const Table = ({ headers, data, actionButtons }) => {
                 {Object.entries(rest).map(([key, value]) => (
                   <div
                     key={key}
-                    className="text-sm text-gray-500 whitespace-nowrap"
+                    className="text-sm text-gray-500 whitespace-nowrap mb-2"
                   >
                     <div className="font-bold">{key}</div>
                     <div>{value}</div>
                   </div>
                 ))}
                 {actionButtons && actionButtons.length > 0 && (
-                  <div className="text-sm text-gray-500 whitespace-nowrap">
+                  <div className="text-sm text-gray-500 whitespace-nowrap mb-2">
                     {actionButtons.map((button, buttonIndex) => (
                       <button
                         key={buttonIndex}

@@ -31,9 +31,9 @@ const DashboardLayout = ({ children }) => {
       <div ref={sidebarRef} className={`relative md:w-[260px] w-0`}>
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
-      <div className="flex flex-1 flex-col bg-[#fafafa] min-h-screen">
+      <div className="flex flex-1 flex-col bg-[#fafafa] min-h-screen relative">
         <Nav isOpen={isOpen} setIsOpen={setIsOpen} />
-        <div className="p-5">{children}</div>
+        <div className="p-5 mt-[64px]">{children}</div>
       </div>
     </>
   );

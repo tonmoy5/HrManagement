@@ -9,12 +9,6 @@ const DepartmentSchema = new Schema({
     type: String,
     required: [true, "Department description is required."],
   },
-  projects: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Project",
-    },
-  ],
 });
 
 const Department = models.Department || model("Department", DepartmentSchema);

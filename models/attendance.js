@@ -12,10 +12,10 @@ const AttendanceSchema = new Schema(
       required: [true, "Date is required."],
     },
     checkInTime: {
-      type: String,
+      type: Date, // Change the type to Date
     },
     checkOutTime: {
-      type: String,
+      type: Date, // Change the type to Date
     },
   },
   { timestamps: true }

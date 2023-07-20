@@ -12,6 +12,22 @@ export const POST = async (req) => {
 
   try {
     await connectToDB();
+
+    // Find the existing attendance document by employeeId and date
+    const existingAttendance = await Attendance.findOne({
+      employee: employeeId,
+      date,
+    });
+
+    if (existingAttendance) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Check in data already exists!",
+        }),
+        { status: 500 }
+      );
+    }
     const newAttendance = new Attendance({
       employee: employeeId,
       date,

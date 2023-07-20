@@ -1,10 +1,16 @@
+import Department from "@models/department";
+import Designation from "@models/designation";
 import Employee from "@models/employee";
 import { connectToDB } from "@utils/database";
 
 export const GET = async (req) => {
   try {
     await connectToDB();
-    const employees = await Employee.find({});
+    Designation.init();
+    Department.init();
+    const employees = await Employee.find({})
+      .populate("designation")
+      .populate("department");
 
     return new Response(
       JSON.stringify({

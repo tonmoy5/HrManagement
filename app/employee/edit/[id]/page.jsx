@@ -1,12 +1,15 @@
 "use client";
 import Alert from "@components/Alert";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const metadata = {
   title: "HRM | Employee",
 };
 
-const EmployeeForm = () => {
+const EditEmployee = () => {
+  const router = useRouter();
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -38,6 +41,11 @@ const EmployeeForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const employeeResponse = await fetch(`/api/employee/${id}`);
+        const employeeData = await employeeResponse.json();
+
+        setFormData(employeeData.data);
+
         const designationResponse = await fetch("/api/designation");
         const designationData = await designationResponse.json();
         setDesignation(designationData.data);
@@ -78,9 +86,9 @@ const EmployeeForm = () => {
     setLoading(true);
 
     try {
-      // Make a POST request to the backend API
-      const response = await fetch("/api/employee", {
-        method: "POST",
+      // Make a PUT request to the backend API
+      const response = await fetch(`/api/employee/${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -93,27 +101,11 @@ const EmployeeForm = () => {
 
       setToast({
         active: true,
-        message: "Employee successfully added!",
+        message: "Employee successfully updated!",
         className: "bg-green-100 text-green-500",
       });
 
-      // Reset the form fields
-      setFormData({
-        fullName: "",
-        email: "",
-        designation: "",
-        department: "",
-        joiningDate: "",
-        salary: "",
-        bankAccount: {
-          accountNumber: "",
-          accountName: "",
-          branch: "",
-        },
-        taxInformation: "",
-        allowances: "",
-        address: "",
-      });
+      router.push("/employee");
 
       // Display a success message or perform any other necessary actions
       console.log("Form data submitted successfully!");
@@ -139,7 +131,7 @@ const EmployeeForm = () => {
         message={toast.message}
       />
       <h1 className="font-bold text-lg mb-3 blue_gradient w-max">
-        Add Employee
+        Update Employee
       </h1>
       <form onSubmit={handleSubmit} className=" mb-4">
         <div className="mb-4">
@@ -186,7 +178,7 @@ const EmployeeForm = () => {
           <select
             id="designation"
             name="designation"
-            value={formData.designation}
+            value={formData.designation?._id}
             onChange={handleChange}
             required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -210,7 +202,7 @@ const EmployeeForm = () => {
           <select
             id="department"
             name="department"
-            value={formData.department}
+            value={formData.department?._id}
             onChange={handleChange}
             required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -235,7 +227,11 @@ const EmployeeForm = () => {
             type="date"
             id="joiningDate"
             name="joiningDate"
-            value={formData.joiningDate}
+            value={
+              formData.joiningDate
+                ? new Date(formData.joiningDate).toISOString().split("T")[0]
+                : ""
+            }
             onChange={handleChange}
             required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -366,11 +362,11 @@ const EmployeeForm = () => {
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {loading ? "Loading..." : "Add Employee"}
+          {loading ? "Loading..." : "Update"}
         </button>
       </form>
     </div>
   );
 };
 
-export default EmployeeForm;
+export default EditEmployee;

@@ -1,10 +1,11 @@
 import DashboardLayout from "@components/DashboardLayout";
 import TopLoadingBar from "@components/TopLoadingBar";
 import "@styles/global.css";
-
 export const metadata = {
-  title: "HR Management",
-  description: "HR Management Software",
+  title: {
+    template: "HRM | %s ",
+    default: "HRM", // a default is required when creating a template
+  },
 };
 
 const RootLayout = ({ children }) => {

@@ -1,3 +1,7 @@
+export const metadata = {
+  title: "HRM | Dashboard",
+  description: "HR Management Software",
+};
 const Home = () => {
   const cardData = [
     {

@@ -2,6 +2,10 @@ import AttendanceForm from "@components/AttendanceForm";
 import AttendanceLogTable from "@components/AttendanceLogTable";
 import Attendance from "@models/attendance";
 
+export const metadata = {
+  title: "Attendance Form",
+};
+
 const AttendanceFormPage = async () => {
   const res = await import("../../api/employee/route");
   const employeesData = await (await res.GET()).json();

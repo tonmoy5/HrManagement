@@ -8,6 +8,10 @@ import { GoPencil } from "react-icons/go";
 import { HiOutlineTrash } from "react-icons/hi";
 import { IoMdAdd } from "react-icons/io";
 
+export const metadata = {
+  title: "HRM | Employee",
+};
+
 const Designation = () => {
   const headers = ["Title", "Details"];
   const [data, setData] = useState([]);
@@ -89,8 +93,16 @@ const Designation = () => {
   };
 
   const actionButtons = [
-    { label: <GoPencil className="text-xl" />, onClick: handleEdit },
-    { label: <HiOutlineTrash className="text-xl" />, onClick: handleDelete },
+    {
+      label: <GoPencil className="text-xl" />,
+      onClick: handleEdit,
+      title: "Edit",
+    },
+    {
+      label: <HiOutlineTrash className="text-xl" />,
+      onClick: handleDelete,
+      title: "Delete",
+    },
   ];
 
   return (
@@ -136,7 +148,7 @@ const Designation = () => {
       ) : (
         <Table
           headers={headers}
-          data={data.map((d) => {
+          data={data?.map((d) => {
             return { _id: d._id, title: d.title, details: d.details };
           })}
           actionButtons={actionButtons}

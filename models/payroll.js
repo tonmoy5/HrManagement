@@ -29,6 +29,7 @@ const PayrollSchema = new Schema({
   grossSalary: {
     type: Number,
     required: [true, "Gross salary is required."],
+    default: 0, // Set a default value of 0 if the value is not provided or invalid
   },
   deductions: {
     type: Number,
@@ -41,10 +42,16 @@ const PayrollSchema = new Schema({
   netSalary: {
     type: Number,
     required: [true, "Net salary is required."],
+    default: 0,
   },
   paymentDate: {
     type: Date,
     required: [true, "Payment date is required."],
+  },
+  status: {
+    type: String,
+    enum: ["draft", "approved", "paid"],
+    default: "draft", // Set the default status to "draft"
   },
 });
 

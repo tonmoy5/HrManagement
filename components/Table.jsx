@@ -1,3 +1,5 @@
+import ActionButton from "./ActionButton";
+
 const Table = ({ headers, data, actionButtons }) => {
   return (
     <>
@@ -6,19 +8,19 @@ const Table = ({ headers, data, actionButtons }) => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
                 SR
               </th>
               {headers.map((header, index) => (
                 <th
                   key={index}
-                  className="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider"
+                  className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
                 >
                   {header}
                 </th>
               ))}
               {actionButtons && actionButtons.length > 0 && (
-                <th className="px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
               )}
@@ -30,27 +32,32 @@ const Table = ({ headers, data, actionButtons }) => {
 
               return (
                 <tr key={rowIndex}>
-                  <td className="px-6 py-4 text-sm text-center text-gray-500 whitespace-nowrap">
+                  <td className="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap">
                     {rowIndex + 1}
                   </td>
                   {Object.values(rest).map((cell, cellIndex) => (
                     <td
                       key={cellIndex}
-                      className="px-2 py-4 text-sm text-center text-gray-500 whitespace-nowrap mt-2"
+                      className="px-6 py-4 text-sm text-left text-gray-500 whitespace-nowrap mt-2"
                     >
                       {cell}
                     </td>
                   ))}
                   {actionButtons && actionButtons.length > 0 && (
-                    <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap mt-2">
+                    <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap mt-2 flex ">
                       {actionButtons.map((button, buttonIndex) => (
-                        <button
+                        // <button
+                        //   key={buttonIndex}
+                        //   onClick={() => button.onClick(row)}
+                        //   className="mr-2"
+                        // >
+                        //   {button.label}
+                        // </button>
+                        <ActionButton
                           key={buttonIndex}
-                          onClick={() => button.onClick(row)}
-                          className="mr-2"
-                        >
-                          {button.label}
-                        </button>
+                          button={button}
+                          row={row}
+                        />
                       ))}
                     </td>
                   )}

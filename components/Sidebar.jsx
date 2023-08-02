@@ -25,7 +25,7 @@ const links = [
     submenu: [
       { name: "Designation", href: "/employee/designation" },
       { name: "Add Employee", href: "/employee/add" },
-      { name: "Manage Employee", href: "/employee/manage" },
+      { name: "Manage Employee", href: "/employee" },
     ],
   },
   {
@@ -38,7 +38,7 @@ const links = [
     icon: LiaUserEditSolid,
     submenu: [
       { name: "Attendance Form", href: "/attendance/form" },
-      { name: "Attendance Log", href: "/attendance/log" },
+      { name: "Attendance Log", href: "/attendance" },
     ],
   },
   { name: "Payouts", icon: AiOutlineDollar, href: "/payouts" },

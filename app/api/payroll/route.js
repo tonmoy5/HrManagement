@@ -19,7 +19,6 @@ export const GET = async (req) => {
     const payrollData = [];
 
     for (const employee of employees) {
-      console.log("🚀 ~ file: route.js:22 ~ GET ~ employees:", employees);
       // Check if payroll entry for the current month exists for this employee
       const existingPayroll = await Payroll.findOne({
         employee: employee._id,

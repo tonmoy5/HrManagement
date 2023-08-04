@@ -25,7 +25,6 @@ const Employees = () => {
         setLoading(true);
         const response = await fetch("/api/employee");
         const json = await response.json();
-        console.log("🚀 ~ file: page.jsx:62 ~ fetchData ~ json:", json);
         setData(json.data);
       } catch (error) {
         console.error("Error fetching data:", error);

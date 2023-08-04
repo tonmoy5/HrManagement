@@ -1,4 +1,5 @@
 "use client";
+import Alert from "@components/Alert";
 import LeaveForm from "@components/LeaveForm";
 // LeaveManagement.js
 
@@ -9,11 +10,6 @@ import { BsCheck } from "react-icons/bs";
 import { GoPencil } from "react-icons/go";
 import { HiOutlineTrash } from "react-icons/hi";
 import { IoMdAdd } from "react-icons/io";
-
-export const metadata = {
-  title: "HRM | Leaves",
-};
-
 const LeaveManagement = () => {
   const headers = [
     "Employee Name",
@@ -26,6 +22,12 @@ const LeaveManagement = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState(null);
+
+  const [toast, setToast] = useState({
+    active: false,
+    message: "",
+    className: "",
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +55,6 @@ const LeaveManagement = () => {
   };
 
   const handleEdit = (leave) => {
-    console.log("🚀 ~ file: page.jsx:45 ~ handleEdit ~ leave:", leave);
     setSelectedLeave(leave);
     setIsModalOpen(true);
   };
@@ -80,7 +81,30 @@ const LeaveManagement = () => {
     console.log("Delete clicked for leave:", leave);
   };
 
-  const handleUpdateStatus = (row) => {};
+  const handleUpdateStatus = async (row) => {
+    if (row?.status?.props?.children === "approved") {
+      return setToast({
+        active: true,
+        message: "Leave already approved!",
+        className: "bg_green_gradient text-white",
+      });
+    }
+    const response = await fetch("/api/leave", {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ _id: row._id, status: "approved" }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      setToast({
+        active: true,
+        message: "Leave successfully approved!",
+        className: "bg_green_gradient text-white",
+      });
+    }
+  };
 
   const actionButtons = [
     {
@@ -102,6 +126,12 @@ const LeaveManagement = () => {
 
   return (
     <section className="p-5 bg-white rounded shadow">
+      <Alert
+        className={toast.className}
+        handleClose={() => setToast((p) => ({ ...p, active: false }))}
+        isAlertOpen={toast.active}
+        message={toast.message}
+      />
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

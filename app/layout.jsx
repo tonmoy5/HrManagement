@@ -1,4 +1,5 @@
 import DashboardLayout from "@components/DashboardLayout";
+import Provider from "@components/Provider";
 import TopLoadingBar from "@components/TopLoadingBar";
 import "@styles/global.css";
 export const metadata = {
@@ -13,8 +14,10 @@ const RootLayout = ({ children }) => {
     <html lang="en">
       <body>
         <TopLoadingBar />
-        <main className="flex text-[#0e1726]">
-          <DashboardLayout children={children} />
+        <main className=" text-[#0e1726]">
+          <Provider>
+            <DashboardLayout children={children} />
+          </Provider>
         </main>
       </body>
     </html>

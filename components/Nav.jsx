@@ -1,7 +1,9 @@
+"use client";
 import useOutsideClick from "@hooks/useOutsideClick";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { AiOutlineSetting } from "react-icons/ai";
 import { CiLogout } from "react-icons/ci";
@@ -9,12 +11,33 @@ import { FaRegUser } from "react-icons/fa";
 
 const Nav = ({ isOpen, setIsOpen }) => {
   const [isSettingOpen, setIsSettingOpen] = useState(false);
+  const router = useRouter();
 
   const profileMenuRef = useRef(null);
 
   useOutsideClick(profileMenuRef, () => {
     setIsSettingOpen(false);
   });
+
+  const handleSignOut = async () => {
+    try {
+      // Clear the session cookie on the client-side
+      // document.cookie =
+      //   "next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      // console.log(
+      //   "🚀 ~ file: Nav.jsx:26 ~ handleSignOut ~  document.cookie:",
+      //   document.cookie
+      // );
+      // document.cookie =
+      //   "next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+      await fetch("/api/logout", { method: "POST" });
+
+      // Redirect to the login page
+      router.push("/auth/login");
+    } catch (error) {
+      console.error("Error during sign-out:", error);
+    }
+  };
 
   return (
     <div className="h-[64px] bg-white shadow flex items-center justify-between px-5 fixed top-0 left-0 w-full z-10">
@@ -109,7 +132,10 @@ const Nav = ({ isOpen, setIsOpen }) => {
                 </li>
               </ul>
               <div className="border-t w-full"></div>
-              <button className=" py-3 px-4 hover:bg-indigo-100 hover:text-indigo-500 w-full text-sm flex items-center gap-2 text-red-500">
+              <button
+                onClick={handleSignOut}
+                className=" py-3 px-4 hover:bg-indigo-100 hover:text-indigo-500 w-full text-sm flex items-center gap-2 text-red-500"
+              >
                 <CiLogout className="text-lg" />
                 Logout
               </button>

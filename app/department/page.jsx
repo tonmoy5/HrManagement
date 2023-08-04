@@ -32,7 +32,6 @@ const Department = () => {
   };
 
   const handleEdit = (row) => {
-    console.log("Edit clicked for row:", row);
     setSelectedRow(row);
     handleOpenModal();
   };

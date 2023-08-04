@@ -96,9 +96,8 @@ export const PUT = async (req) => {
         await Leave.findByIdAndUpdate(_id, { status: "approved" });
         return new Response(
           JSON.stringify({
-            success: false,
-            message:
-              "Leave ID, employee ID, start date, end date, and reason are required.",
+            success: true,
+            message: "Status updated successfully",
           }),
           { status: 400 }
         );

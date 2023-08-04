@@ -2,13 +2,23 @@
 
 import { useNavigationEvent } from "@hooks/useNavigationEvent";
 import useOutsideClick from "@hooks/useOutsideClick";
-import { useRef, useState } from "react";
+import { useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import Nav from "./Nav";
 import Sidebar from "./Sidebar";
 
 const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
+  const pathname = usePathname();
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  console.log(
+    "🚀 ~ file: DashboardLayout.jsx:17 ~ DashboardLayout ~ status:",
+    status
+  );
+  console.log(session);
 
   useOutsideClick(sidebarRef, () => {
     setIsOpen(false);
@@ -26,15 +36,31 @@ const DashboardLayout = ({ children }) => {
     }, 1000);
   });
 
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/login");
+    }
+  }, [status]);
+
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
+
   return (
     <>
-      <div ref={sidebarRef} className={`relative md:w-[260px] w-0`}>
-        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-      </div>
-      <div className="flex flex-1 flex-col bg-[#fafafa] min-h-screen relative">
-        <Nav isOpen={isOpen} setIsOpen={setIsOpen} />
-        <div className="p-5 mt-[64px]">{children}</div>
-      </div>
+      {pathname === "/auth/login"
+        ? children
+        : status === "authenticated" && (
+            <div className="flex">
+              <div ref={sidebarRef} className={`relative md:w-[260px] w-0`}>
+                <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+              </div>
+              <div className="flex flex-1 flex-col bg-[#fafafa] min-h-screen relative">
+                <Nav isOpen={isOpen} setIsOpen={setIsOpen} />
+                <div className="p-5 mt-[64px]">{children}</div>
+              </div>
+            </div>
+          )}
     </>
   );
 };

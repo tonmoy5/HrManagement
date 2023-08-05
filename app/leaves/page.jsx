@@ -8,7 +8,6 @@ import Table from "@components/Table";
 import { useEffect, useState } from "react";
 import { BsCheck } from "react-icons/bs";
 import { GoPencil } from "react-icons/go";
-import { HiOutlineTrash } from "react-icons/hi";
 import { IoMdAdd } from "react-icons/io";
 const LeaveManagement = () => {
   const headers = [
@@ -59,8 +58,13 @@ const LeaveManagement = () => {
     setIsModalOpen(true);
   };
 
-  const handleUpdateLeave = (updatedLeave) => {
-    if (updatedLeave._id) {
+  const handleUpdateLeave = (updatedLeave, flag) => {
+    console.log("updateLeave", updatedLeave);
+    if (flag === "old") {
+      console.log(
+        "🚀 ~ file: page.jsx:64 ~ handleUpdateLeave ~ updatedLeave._id:",
+        updatedLeave._id
+      );
       // If ID exists, update the existing leave entry
       setLeaveData((prevData) => {
         return prevData.map((leave) =>
@@ -69,6 +73,7 @@ const LeaveManagement = () => {
       });
     } else {
       // If ID doesn't exist, add the new leave entry
+      console.log("New leave entry");
       setLeaveData((prevData) => [...prevData, updatedLeave]);
     }
     setIsModalOpen(false);
@@ -112,11 +117,11 @@ const LeaveManagement = () => {
       onClick: handleEdit,
       title: "Edit",
     },
-    {
-      label: <HiOutlineTrash className="text-xl" />,
-      onClick: handleDelete,
-      title: "Delete",
-    },
+    // {
+    //   label: <HiOutlineTrash className="text-xl" />,
+    //   onClick: handleDelete,
+    //   title: "Delete",
+    // },
     {
       label: <BsCheck className="text-xl" />,
       onClick: handleUpdateStatus,

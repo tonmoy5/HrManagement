@@ -1,19 +1,18 @@
-// components/AttendanceGraph.js
 "use client";
 import Chart from "chart.js/auto";
 import { useEffect, useId, useState } from "react";
 
-const AttendanceGraph = () => {
+const LeavesGraph = () => {
   const id = useId();
-  const [attendanceData, setAttendanceData] = useState([]);
+  const [leaveData, setLeaveData] = useState([]);
   const [chartInstance, setChartInstance] = useState(null);
 
   useEffect(() => {
-    // Fetch the attendance data for the last 30 days
-    fetchAttendanceData();
+    // Fetch the leave data for the last 30 days
+    fetchLeaveData();
   }, []);
 
-  const fetchAttendanceData = async () => {
+  const fetchLeaveData = async () => {
     const today = new Date();
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -23,26 +22,16 @@ const AttendanceGraph = () => {
 
     try {
       const response = await fetch(
-        `/api/attendance?startDate=${startDate}&endDate=${endDate}`
+        `/api/leave?startDate=${startDate}&endDate=${endDate}`
       );
       const data = await response.json();
-      console.log(
-        "🚀 ~ file: AttendanceGraph.jsx:26 ~ fetchAttendanceData ~ data:",
-        data
-      );
-      // Format the data for the attendance graph
-      const formattedData = formatAttendanceData(
-        data.data,
-        thirtyDaysAgo,
-        today
-      );
-      console.log(
-        "🚀 ~ file: AttendanceGraph.jsx:33 ~ fetchAttendanceData ~ formattedData:",
-        formattedData
-      );
-      setAttendanceData(formattedData);
+      console.log("Leave data:", data);
+      // Format the data for the leave table
+      const formattedData = formatLeaveData(data.data, thirtyDaysAgo, today);
+      console.log("Formatted leave data:", formattedData);
+      setLeaveData(formattedData);
     } catch (error) {
-      console.error("Error fetching attendance data:", error);
+      console.error("Error fetching leave data:", error);
     }
   };
 
@@ -53,15 +42,19 @@ const AttendanceGraph = () => {
     return `${year}-${month}-${day}`;
   };
 
-  const formatAttendanceData = (data, startDate, endDate) => {
+  const formatLeaveData = (data, startDate, endDate) => {
     const formattedData = [];
     let currentDate = new Date(startDate);
 
     while (currentDate <= endDate) {
       const dateString = formatDate(currentDate);
       const count = data.reduce((total, item) => {
-        const itemDate = new Date(item.date);
-        if (itemDate.toISOString().startsWith(dateString)) {
+        const itemStartDate = new Date(item.startDate);
+        const itemEndDate = new Date(item.endDate);
+        if (
+          itemStartDate.toISOString().startsWith(dateString) ||
+          itemEndDate.toISOString().startsWith(dateString)
+        ) {
           return total + 1;
         }
         return total;
@@ -79,37 +72,21 @@ const AttendanceGraph = () => {
   };
 
   useEffect(() => {
-    // Create the chart once the attendance data is available
-    if (attendanceData.length > 0) {
+    // Create the chart once the leave data is available
+    if (leaveData.length > 0) {
       createChart();
     }
-  }, [attendanceData]);
-
-  useEffect(() => {
-    // Add a resize event listener to handle chart responsiveness
-    const resizeHandler = () => {
-      if (chartInstance) {
-        chartInstance.resize();
-      }
-    };
-
-    window.addEventListener("resize", resizeHandler);
-
-    // Clean up the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener("resize", resizeHandler);
-    };
-  }, [chartInstance]);
+  }, [leaveData]);
 
   const createChart = () => {
     const ctx = document.getElementById(id).getContext("2d");
 
-    // Extract dates and attendance counts for the last 30 days
-    const labels = attendanceData.map((item) => {
+    // Extract dates and leave counts for the last 30 days
+    const labels = leaveData.map((item) => {
       const date = new Date(item.date);
       return `${date.getUTCDate()}`;
     });
-    const counts = attendanceData.map((item) => item.count);
+    const counts = leaveData.map((item) => item.count);
 
     const newChartInstance = new Chart(ctx, {
       type: "line",
@@ -117,7 +94,7 @@ const AttendanceGraph = () => {
         labels,
         datasets: [
           {
-            label: "Number of Employees",
+            label: "Number of Leaves",
             data: counts,
             borderColor: "rgba(75, 192, 192, 1)",
             borderWidth: 1,
@@ -140,9 +117,24 @@ const AttendanceGraph = () => {
         maintainAspectRatio: false,
       },
     });
-
     setChartInstance(newChartInstance);
   };
+
+  useEffect(() => {
+    // Add a resize event listener to handle chart responsiveness
+    const resizeHandler = () => {
+      if (chartInstance) {
+        chartInstance.resize();
+      }
+    };
+
+    window.addEventListener("resize", resizeHandler);
+
+    // Clean up the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("resize", resizeHandler);
+    };
+  }, [chartInstance]);
 
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto" }}>
@@ -151,4 +143,4 @@ const AttendanceGraph = () => {
   );
 };
 
-export default AttendanceGraph;
+export default LeavesGraph;

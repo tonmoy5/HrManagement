@@ -45,6 +45,7 @@ const LeaveForm = ({ initialData, onSubmit, handleCloseModal }) => {
     e.preventDefault();
 
     const leaveData = {
+      _id: initialData?._id || undefined,
       employeeId,
       startDate,
       endDate,
@@ -72,7 +73,11 @@ const LeaveForm = ({ initialData, onSubmit, handleCloseModal }) => {
       }
 
       setIsLoading(false);
-      onSubmit(data);
+      if (initialData) {
+        onSubmit(data.data, "old");
+      } else {
+        onSubmit(data.data, "new");
+      }
     } catch (error) {
       setIsLoading(false);
       setError(error.message || "Failed to submit leave request.");

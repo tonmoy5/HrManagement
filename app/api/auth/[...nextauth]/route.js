@@ -36,9 +36,11 @@ export const authOptions = {
             // Any object returned will be saved in `user` property of the JWT
             return {
               id: user._id.toString(),
-              username: user.username,
+              name: user.username,
               email: user.email,
               role: user.role,
+              image:
+                "https://cdn3.iconfinder.com/data/icons/avatars-collection/256/22-512.png",
             };
           } else {
             // If the user is not found or password doesn't match, return null
@@ -55,11 +57,8 @@ export const authOptions = {
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       if (user.id) {
-        console.log("login true");
-
         return true;
       } else {
-        console.log("login false");
         return false;
       }
     },

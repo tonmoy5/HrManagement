@@ -1,4 +1,5 @@
 import AttendanceGraph from "@components/AttendanceGraph";
+import LeavesGraph from "@components/LeaveGraph";
 import Attendance from "@models/attendance";
 import Employee from "@models/employee";
 import Leave from "@models/leave";
@@ -71,7 +72,7 @@ const Home = async () => {
           <h3 className="text-lg mb-5 orange_gradient">
             Leaves (last 30 days)
           </h3>
-          <AttendanceGraph />
+          <LeavesGraph />
         </div>
       </div>
     </section>

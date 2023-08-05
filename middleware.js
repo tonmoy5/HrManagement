@@ -1,18 +1,25 @@
+import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
-// This function can be marked `async` if using `await` inside
-export async function middleware(request) {
-  // console.log(request);
-  const url = new URL(request.url);
-  if (request.nextUrl.pathname.startsWith("/auth/login")) {
+const legacyPrefixes = ["/api/auth"];
+
+export async function middleware(req) {
+  const { pathname } = req.nextUrl;
+
+  if (legacyPrefixes.some((prefix) => pathname.startsWith(prefix))) {
     return NextResponse.next();
   }
-  //   const session = await getServerSession(authOptions);
-  //   console.log("🚀 ~ file: middleware.js:12 ~ middleware ~ session:", session);
-  // const response = await fetch("http://localhost:3000/api/auth/session");
-  // console.log("🚀 ~ file: middleware.js:12 ~ middleware ~ response:", response);
-  // const data = await response.json();
-  // console.log("🚀 ~ file: middleware.js:13 ~ middleware ~ data:", data);
+  const session = await getToken({
+    req: req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  if (!session && pathname.startsWith("/api"))
+    return NextResponse.json(
+      { success: false, message: "Unauthenticated access" },
+      { status: 401 }
+    );
+
   return NextResponse.next();
 }
 

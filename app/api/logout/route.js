@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 
 export const POST = (request) => {
-  console.log("logout post request");
-
   // Create a new NextResponse instance with a 200 status code and the desired headers
   const response = new NextResponse(null, {
     status: 200,

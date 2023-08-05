@@ -1,6 +1,7 @@
 // api/attendance.js
 
 import Attendance from "@models/attendance";
+import Employee from "@models/employee";
 import { connectToDB } from "@utils/database";
 
 export const GET = async (req) => {
@@ -27,6 +28,7 @@ export const GET = async (req) => {
     }
 
     // Fetch the attendance data with the specified date range and employeeId
+    await Employee.countDocuments();
     const attendances = await Attendance.find(query)
       .populate("employee")
       .sort({ date: "desc" });

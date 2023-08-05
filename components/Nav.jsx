@@ -1,6 +1,7 @@
 "use client";
 import useOutsideClick from "@hooks/useOutsideClick";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,9 +9,13 @@ import { useRef, useState } from "react";
 import { AiOutlineSetting } from "react-icons/ai";
 import { CiLogout } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
+import { FiLoader } from "react-icons/fi";
 
 const Nav = ({ isOpen, setIsOpen }) => {
   const [isSettingOpen, setIsSettingOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: session } = useSession();
+  console.log("🚀 ~ file: Nav.jsx:16 ~ Nav ~ session:", session);
   const router = useRouter();
 
   const profileMenuRef = useRef(null);
@@ -21,21 +26,15 @@ const Nav = ({ isOpen, setIsOpen }) => {
 
   const handleSignOut = async () => {
     try {
-      // Clear the session cookie on the client-side
-      // document.cookie =
-      //   "next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      // console.log(
-      //   "🚀 ~ file: Nav.jsx:26 ~ handleSignOut ~  document.cookie:",
-      //   document.cookie
-      // );
-      // document.cookie =
-      //   "next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+      setIsLoading(true);
       await fetch("/api/logout", { method: "POST" });
 
       // Redirect to the login page
       router.push("/auth/login");
     } catch (error) {
       console.error("Error during sign-out:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,6 +73,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
       <div ref={profileMenuRef} className="relative">
         <Image
           src={
+            session?.user?.image ||
             "https://html.vristo.sbthemes.com/assets/images/user-profile.jpeg"
           }
           width={40}
@@ -94,6 +94,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
               <div className="flex items-center gap-3 p-4">
                 <Image
                   src={
+                    session?.user?.image ||
                     "https://html.vristo.sbthemes.com/assets/images/user-profile.jpeg"
                   }
                   width={45}
@@ -102,8 +103,10 @@ const Nav = ({ isOpen, setIsOpen }) => {
                   alt="user_image"
                 />
                 <div>
-                  <h3 className="font-bold text-sm">Jon Doe</h3>
-                  <p className="text_color text-sm">jhondoe@gmail.com</p>
+                  <h3 className="font-bold text-sm capitalize">
+                    {session?.user?.name}
+                  </h3>
+                  <p className="text_color text-sm">{session?.user?.email}</p>
                 </div>
               </div>
               <ul className="">
@@ -131,7 +134,11 @@ const Nav = ({ isOpen, setIsOpen }) => {
                 onClick={handleSignOut}
                 className=" py-3 px-4 hover:bg-indigo-100 hover:text-indigo-500 w-full text-sm flex items-center gap-2 text-red-500"
               >
-                <CiLogout className="text-lg" />
+                {isLoading ? (
+                  <FiLoader className="text-lg animate-spin" />
+                ) : (
+                  <CiLogout className="text-lg" />
+                )}
                 Logout
               </button>
             </motion.div>

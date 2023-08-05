@@ -2,6 +2,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -65,47 +66,54 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-80">
-        <h2 className="text-2xl font-bold mb-6">Login</h2>
+    <div className="flex justify-center items-center min-h-screen bg-[#f5f6fa] ">
+      <div className="bg-white/20 backdrop-blur-lg shadow-md rounded px-8 pt-10 pb-10 w-96 relative overflow-hidden">
+        <div className="w-96 bg_blue_gradient h-1 absolute top-0 left-0"></div>
+        <div className="flex items-center gap-2 justify-center mb-6">
+          <img src="/logo.svg" alt="logo" className="w-8" />
+          <h2 className="text-2xl font-bold blue_gradient w-max">HRM</h2>
+        </div>
+        <h4 className="text-lg mb-6 text-center">Hello! Welcome back</h4>
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label
-              htmlFor="username"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Username
+            <label htmlFor="username" className="block text-sm mb-2">
+              Email or Username
             </label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="w-full border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-3 border"
-            />
+            <div className="relative flex items-center ">
+              <FaEnvelope className="absolute text-blue-500 left-3 top-1/2 transform -translate-y-1/2" />
+              <input
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter your username or email"
+                required
+                className="w-full border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-3 pl-10 "
+              />
+            </div>
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 font-medium mb-2"
-            >
+            <label htmlFor="password" className="block text-sm mb-2">
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-3 border"
-            />
+            <div className="relative flex items-center">
+              <FaLock className="absolute text-blue-500 left-3 top-1/2 transform -translate-y-1/2" />
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="*********"
+                className="w-full border-gray-300 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-3 pl-10 "
+              />
+            </div>
           </div>
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="w-full bg_blue_gradient text-white hover:bg-opacity-60 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             {isLoading ? "Logging in..." : "Login"}
           </button>

@@ -9,8 +9,21 @@ export const GET = async (req) => {
     await connectToDB();
     await Employee.countDocuments();
 
-    // Fetch all leave records
-    const leaves = await Leave.find({}).populate("employee");
+    // Extract the startDate and endDate query parameters from the request URL
+    const { startDate = "", endDate = "" } = req.query || {};
+    // Prepare the query object to filter by date range
+    const query = {};
+    if (startDate && endDate) {
+      query.startDate = {
+        $gte: new Date(startDate),
+      };
+      query.endDate = {
+        $lte: new Date(endDate),
+      };
+    }
+
+    // Fetch the leave records with the specified date range
+    const leaves = await Leave.find(query).populate("employee");
 
     return new Response(
       JSON.stringify({
@@ -57,9 +70,10 @@ export const POST = async (req) => {
     }
 
     await connectToDB();
+    await Employee.countDocuments();
 
     // Create the leave request record
-    await Leave.create({
+    const newLeave = await Leave.create({
       employee: employeeId,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
@@ -68,10 +82,13 @@ export const POST = async (req) => {
       status: "pending", // Set the default status to "pending"
     });
 
+    const leaveData = await newLeave.populate("employee");
+
     return new Response(
       JSON.stringify({
         success: true,
         message: "Leave request submitted successfully",
+        data: leaveData,
       }),
       { status: 200 }
     );
@@ -88,6 +105,9 @@ export const POST = async (req) => {
 };
 
 export const PUT = async (req) => {
+  await connectToDB();
+  await Employee.countDocuments();
+
   try {
     const { _id, employeeId, startDate, endDate, halfDay, reason, status } =
       await req.json();
@@ -111,8 +131,6 @@ export const PUT = async (req) => {
         { status: 400 }
       );
     }
-
-    await connectToDB();
 
     // Find the leave record by ID
     const existingLeave = await Leave.findById(_id);
@@ -140,6 +158,7 @@ export const PUT = async (req) => {
       JSON.stringify({
         success: true,
         message: "Leave request updated successfully",
+        data: await existingLeave.populate("employee"),
       }),
       { status: 200 }
     );

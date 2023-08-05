@@ -4,10 +4,6 @@ import TableLoader from "@components/TableLoader";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 
-export const metadata = {
-  title: "HRM | Payroll",
-};
-
 const Payroll = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [data, setData] = useState([]);

@@ -9,10 +9,6 @@ import { FiEye } from "react-icons/fi";
 import { GoPencil } from "react-icons/go";
 import { IoMdAdd } from "react-icons/io";
 
-export const metadata = {
-  title: "HRM | Employee",
-};
-
 const Employees = () => {
   const headers = ["Full Name", "Email", "Designation"];
   const [data, setData] = useState([]);

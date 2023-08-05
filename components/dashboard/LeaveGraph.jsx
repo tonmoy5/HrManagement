@@ -25,10 +25,8 @@ const LeavesGraph = () => {
         `/api/leave?startDate=${startDate}&endDate=${endDate}`
       );
       const data = await response.json();
-      console.log("Leave data:", data);
       // Format the data for the leave table
       const formattedData = formatLeaveData(data.data, thirtyDaysAgo, today);
-      console.log("Formatted leave data:", formattedData);
       setLeaveData(formattedData);
     } catch (error) {
       console.error("Error fetching leave data:", error);

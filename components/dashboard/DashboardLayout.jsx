@@ -15,11 +15,6 @@ const DashboardLayout = ({ children }) => {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session, status } = useSession();
-  console.log(
-    "🚀 ~ file: DashboardLayout.jsx:17 ~ DashboardLayout ~ status:",
-    status
-  );
-  console.log(session);
 
   useOutsideClick(sidebarRef, () => {
     setIsOpen(false);
@@ -50,13 +45,9 @@ const DashboardLayout = ({ children }) => {
     }
   }, [status]);
 
-  // if (status === "loading") {
-  //   return <Preloader />;
-  // }
-
   return (
     <>
-      {<Preloader />}
+      <Preloader />
       {pathname === "/auth/login"
         ? children
         : status === "authenticated" && (

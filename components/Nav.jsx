@@ -15,7 +15,6 @@ const Nav = ({ isOpen, setIsOpen }) => {
   const [isSettingOpen, setIsSettingOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
-  console.log("🚀 ~ file: Nav.jsx:16 ~ Nav ~ session:", session);
   const router = useRouter();
 
   const profileMenuRef = useRef(null);

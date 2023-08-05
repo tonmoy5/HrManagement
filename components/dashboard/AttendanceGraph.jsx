@@ -26,20 +26,14 @@ const AttendanceGraph = () => {
         `/api/attendance?startDate=${startDate}&endDate=${endDate}`
       );
       const data = await response.json();
-      console.log(
-        "🚀 ~ file: AttendanceGraph.jsx:26 ~ fetchAttendanceData ~ data:",
-        data
-      );
+
       // Format the data for the attendance graph
       const formattedData = formatAttendanceData(
         data.data,
         thirtyDaysAgo,
         today
       );
-      console.log(
-        "🚀 ~ file: AttendanceGraph.jsx:33 ~ fetchAttendanceData ~ formattedData:",
-        formattedData
-      );
+
       setAttendanceData(formattedData);
     } catch (error) {
       console.error("Error fetching attendance data:", error);

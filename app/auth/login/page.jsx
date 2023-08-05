@@ -48,9 +48,9 @@ const Login = () => {
         password,
         redirect: false,
       });
-      console.log("🚀 ~ file: page.jsx:22 ~ handleSubmit ~ res:", res);
 
       if (!res.error) {
+        window.localStorage.setItem("login", "true");
         router.push("/");
       } else {
         setError("Username or password is not valid.");

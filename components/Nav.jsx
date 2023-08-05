@@ -65,12 +65,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
           </button>
         )}
         <div className="md:hidden flex gap-2">
-          <Image
-            src={"https://html.vristo.sbthemes.com/assets/images/logo.svg"}
-            width={30}
-            height={30}
-            alt="HR_Logo"
-          />
+          <Image src={"/logo.svg"} width={30} height={30} alt="HR_Logo" />
           <h1 className="md:text-xl text-base font-bold">HR Management</h1>
         </div>
       </div>

@@ -8,10 +8,6 @@ import { GoPencil } from "react-icons/go";
 import { HiOutlineTrash } from "react-icons/hi";
 import { IoMdAdd } from "react-icons/io";
 
-export const metadata = {
-  title: "HRM | Department",
-};
-
 const Department = () => {
   const headers = ["Name", "Description"];
   const [data, setData] = useState([]);

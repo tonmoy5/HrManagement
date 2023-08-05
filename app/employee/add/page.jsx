@@ -2,10 +2,6 @@
 import Alert from "@components/Alert";
 import { useEffect, useState } from "react";
 
-export const metadata = {
-  title: "HRM | Employee",
-};
-
 const EmployeeForm = () => {
   const [formData, setFormData] = useState({
     fullName: "",

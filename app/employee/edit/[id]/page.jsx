@@ -3,10 +3,6 @@ import Alert from "@components/Alert";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export const metadata = {
-  title: "HRM | Employee",
-};
-
 const EditEmployee = () => {
   const router = useRouter();
   const { id } = useParams();

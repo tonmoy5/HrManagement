@@ -4,10 +4,6 @@ import TableLoader from "@components/TableLoader";
 import { useEffect, useState } from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 
-export const metadata = {
-  title: "HRM | Attendance Log",
-};
-
 const AttendanceLog = () => {
   const today = new Date();
   const sevenDaysAgo = new Date(today);

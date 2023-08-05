@@ -63,11 +63,9 @@ export const authOptions = {
       }
     },
     async session({ session }) {
-      console.log("🚀 ~ file: route.js:63 ~ session ~ session:", session);
       return session;
     },
     async authorized({ req, token }) {
-      console.log("🚀 ~ file: route.js:84 ~ authorized ~ token:", token);
       if (token) return true; // If there is a token, the user is authenticated
     },
   },

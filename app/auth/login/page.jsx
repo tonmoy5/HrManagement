@@ -11,7 +11,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const router = useRouter();
   const { data: session, status, update } = useSession();
-  console.log("🚀 ~ file: page.jsx:13 ~ Login ~ status:", status);
 
   function getCookie(cname) {
     let name = cname + "=";

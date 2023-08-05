@@ -1,78 +1,40 @@
-import AttendanceGraph from "@components/AttendanceGraph";
-import LeavesGraph from "@components/LeaveGraph";
-import Attendance from "@models/attendance";
-import Employee from "@models/employee";
-import Leave from "@models/leave";
-import { connectToDB } from "@utils/database";
+import AttendanceGraph from "@components/dashboard/AttendanceGraph";
+import DashboardCards from "@components/dashboard/DashboardCards";
+import DepartmentList from "@components/dashboard/DepartmentList";
+import DesignationList from "@components/dashboard/DesignationList";
+import LeavesGraph from "@components/dashboard/LeaveGraph";
 
 export const metadata = {
   title: "HRM | Dashboard",
   description: "HR Management Software",
 };
+
 const Home = async () => {
-  await connectToDB();
-  const totalEmployees = await Employee.countDocuments();
-  const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
-
-  const nextDate = new Date(currentDate);
-  nextDate.setDate(currentDate.getDate() + 1);
-
-  const presentEmployees = await Attendance.find({
-    date: {
-      $gte: currentDate,
-      $lt: nextDate,
-    },
-  }).countDocuments();
-
-  const todayLeaves = await Leave.find({
-    $and: [
-      { startDate: { $lte: currentDate } }, // Check if startDate is less than or equal to the current date
-      { endDate: { $gte: currentDate } }, // Check if endDate is greater than or equal to the current date
-    ],
-  }).countDocuments();
-
-  const cardData = [
-    {
-      title: "Total Employees",
-      count: totalEmployees,
-      style: "bg_green_gradient text-white",
-    },
-    {
-      title: "Today's Presents",
-      count: presentEmployees,
-      style: "bg_blue_gradient text-white",
-    },
-    {
-      title: "Today's Absents",
-      count: totalEmployees - presentEmployees,
-      style: "bg_orange_gradient text-white",
-    },
-    {
-      title: "Today's Leave",
-      count: todayLeaves,
-      style: "bg_red_gradient text-white",
-    },
-  ];
   return (
-    <section>
-      <div className="flex md:flex-row flex-col gap-5">
-        {cardData.map((card, index) => (
-          <Card6 key={index} card={card} />
-        ))}
-      </div>
-      <div className="md:flex gap-5 mt-5 w-full">
-        <div className="bg-white p-5 shadow-md rounded-md w-full">
-          <h3 className="text-lg mb-5 green_gradient">
+    <section className="w-full">
+      <DashboardCards />
+      <div className="md:flex md:flex-wrap gap-5 mt-5 w-full">
+        <div className="md:w-[47%] bg-white p-5 shadow-md rounded-md w-[98%]">
+          <h3 className="text-lg mb-5 green_gradient font-semibold">
             Attendance (last 30 days)
           </h3>
           <AttendanceGraph />
         </div>
-        <div className="bg-white p-5 shadow-md rounded-md w-full md:mt-0 mt-5">
-          <h3 className="text-lg mb-5 orange_gradient">
+        <div className="md:w-[47%] bg-white p-5 shadow-md rounded-md w-[98%] md:mt-0 mt-5">
+          <h3 className="text-lg mb-5 orange_gradient font-semibold">
             Leaves (last 30 days)
           </h3>
           <LeavesGraph />
+        </div>
+      </div>
+      <div className="md:flex gap-5 mt-5 w-full">
+        <div className="md:w-[47%] w-full p-5 bg-white shadow-md rounded-md">
+          <h3 className="blue_gradient mb-2 font-semibold">Departments</h3>
+          <DepartmentList />
+        </div>
+        <div className="md:w-[47%] w-full  p-5 bg-white shadow-md rounded-md md:mt-0 mt-5">
+          <h3 className="green_gradient mb-2 font-semibold">Designations</h3>
+          <DesignationList />
         </div>
       </div>
     </section>
@@ -80,12 +42,3 @@ const Home = async () => {
 };
 
 export default Home;
-
-const Card6 = ({ card }) => {
-  return (
-    <div className={`${card.style} p-5 rounded md:w-1/4 w-full`}>
-      <h3>{card.title}</h3>
-      <p className="text-3xl font-bold">{card.count}</p>
-    </div>
-  );
-};

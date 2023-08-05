@@ -5,9 +5,9 @@ import useOutsideClick from "@hooks/useOutsideClick";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import Nav from "./Nav";
-import Preloader from "./PreLoader";
-import Sidebar from "./Sidebar";
+import Nav from "../Nav";
+import Preloader from "../PreLoader";
+import Sidebar from "../Sidebar";
 
 const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);

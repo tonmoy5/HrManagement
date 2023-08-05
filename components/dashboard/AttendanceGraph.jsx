@@ -88,6 +88,7 @@ const AttendanceGraph = () => {
   useEffect(() => {
     // Add a resize event listener to handle chart responsiveness
     const resizeHandler = () => {
+      console.log("resize event");
       if (chartInstance) {
         chartInstance.resize();
       }
@@ -145,7 +146,7 @@ const AttendanceGraph = () => {
   };
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+    <div style={{ position: "relative", maxWidth: "800px", margin: "0 auto" }}>
       <canvas id={id} width="400" height="200" />
     </div>
   );

@@ -1,4 +1,4 @@
-import DashboardLayout from "@components/DashboardLayout";
+import DashboardLayout from "@components/dashboard/DashboardLayout";
 import Provider from "@components/Provider";
 import TopLoadingBar from "@components/TopLoadingBar";
 import "@styles/global.css";

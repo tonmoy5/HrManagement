@@ -15,6 +15,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
   const [isSettingOpen, setIsSettingOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
+
   const router = useRouter();
 
   const profileMenuRef = useRef(null);
@@ -33,9 +34,13 @@ const Nav = ({ isOpen, setIsOpen }) => {
     } catch (error) {
       console.error("Error during sign-out:", error);
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
+
+  const userAvatar =
+    session?.user?.image ||
+    "https://cdn3.iconfinder.com/data/icons/avatars-collection/256/22-512.png";
 
   return (
     <div className="h-[64px] bg-white shadow flex items-center justify-between px-5 fixed top-0 left-0 w-full z-10">
@@ -71,10 +76,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
       {/* navbar contents */}
       <div ref={profileMenuRef} className="relative">
         <Image
-          src={
-            session?.user?.image ||
-            "https://html.vristo.sbthemes.com/assets/images/user-profile.jpeg"
-          }
+          src={userAvatar}
           width={40}
           height={40}
           className="rounded-full cursor-pointer"
@@ -92,10 +94,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
             >
               <div className="flex items-center gap-3 p-4">
                 <Image
-                  src={
-                    session?.user?.image ||
-                    "https://html.vristo.sbthemes.com/assets/images/user-profile.jpeg"
-                  }
+                  src={userAvatar}
                   width={45}
                   height={45}
                   className="rounded-md cursor-pointer"
@@ -111,7 +110,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
               <ul className="">
                 <li className="">
                   <Link
-                    href={"/"}
+                    href={"/profile"}
                     className=" py-2 px-4 hover:bg-indigo-100 hover:text-indigo-500 w-full text-sm flex items-center gap-2"
                   >
                     <FaRegUser className="text-lg" />

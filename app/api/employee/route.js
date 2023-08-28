@@ -36,6 +36,7 @@ export const POST = async (req) => {
   const {
     fullName,
     email,
+    phone,
     designation,
     department,
     joiningDate,
@@ -59,6 +60,7 @@ export const POST = async (req) => {
       taxInformation,
       allowances,
       address,
+      phone,
     });
     await newEmployee.save();
     return new Response(

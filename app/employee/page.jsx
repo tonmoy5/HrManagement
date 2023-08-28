@@ -5,6 +5,7 @@ import TableLoader from "@components/TableLoader";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BiUser } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
 import { GoPencil } from "react-icons/go";
 import { IoMdAdd } from "react-icons/io";
@@ -43,6 +44,13 @@ const Employees = () => {
       label: <FiEye className="text-xl" />,
       onClick: handleViewDetails,
       title: "Details",
+    },
+    {
+      label: <BiUser className="text-xl" />,
+      onClick: (row) => {
+        router.push(`/profile?email=${row.email}`);
+      },
+      title: "Profile",
     },
     {
       label: <GoPencil className="text-xl" />,

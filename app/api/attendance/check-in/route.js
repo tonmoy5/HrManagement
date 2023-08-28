@@ -38,7 +38,7 @@ export const POST = async (req) => {
       JSON.stringify({
         success: true,
         message: "Attendance punched in successfully",
-        data: newAttendance,
+        data: await newAttendance.populate("employee"),
       }),
       { status: 201 }
     );

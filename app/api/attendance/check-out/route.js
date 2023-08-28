@@ -28,7 +28,7 @@ export const PUT = async (req) => {
       JSON.stringify({
         success: true,
         message: "Attendance punched out successfully",
-        data: existingAttendance,
+        data: await existingAttendance.populate("employee"),
       }),
       { status: 200 }
     );

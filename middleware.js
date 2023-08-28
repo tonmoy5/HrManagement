@@ -1,3 +1,4 @@
+// import { prettyLogger } from "@services/prettyLogger";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
@@ -5,6 +6,8 @@ const legacyPrefixes = ["/api/auth"];
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
+  // prettyLogger.info(`User agent: ${req.headers.get("user-agent")}`);
+  // prettyLogger.info(`Request from: ${req.headers.get("referer")}`);
 
   if (legacyPrefixes.some((prefix) => pathname.startsWith(prefix))) {
     return NextResponse.next();

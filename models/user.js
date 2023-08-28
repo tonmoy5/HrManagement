@@ -15,10 +15,22 @@ const UserSchema = new Schema({
     type: String,
     required: [true, "Password is required."],
   },
+  twitter: {
+    type: String,
+  },
+  website: {
+    type: String,
+  },
+  github: {
+    type: String,
+  },
   role: {
     type: String,
     enum: ["admin", "employee"],
     default: "employee",
+  },
+  image: {
+    type: String, // Store image data as base64 encoded string
   },
 });
 

@@ -1,14 +1,14 @@
 "use client";
 import Alert from "@components/Alert";
 import LeaveForm from "@components/LeaveForm";
-// LeaveManagement.js
 
 import Modal from "@components/Modal";
 import Table from "@components/Table";
 import { useEffect, useState } from "react";
-import { BsCheck } from "react-icons/bs";
+import { AiOutlineCheck } from "react-icons/ai";
 import { GoPencil } from "react-icons/go";
 import { IoMdAdd } from "react-icons/io";
+import { RxCross2 } from "react-icons/rx";
 const LeaveManagement = () => {
   const headers = [
     "Employee Name",
@@ -61,10 +61,6 @@ const LeaveManagement = () => {
   const handleUpdateLeave = (updatedLeave, flag) => {
     console.log("updateLeave", updatedLeave);
     if (flag === "old") {
-      console.log(
-        "🚀 ~ file: page.jsx:64 ~ handleUpdateLeave ~ updatedLeave._id:",
-        updatedLeave._id
-      );
       // If ID exists, update the existing leave entry
       setLeaveData((prevData) => {
         return prevData.map((leave) =>
@@ -73,7 +69,7 @@ const LeaveManagement = () => {
       });
     } else {
       // If ID doesn't exist, add the new leave entry
-      console.log("New leave entry");
+
       setLeaveData((prevData) => [...prevData, updatedLeave]);
     }
     setIsModalOpen(false);
@@ -86,12 +82,12 @@ const LeaveManagement = () => {
     console.log("Delete clicked for leave:", leave);
   };
 
-  const handleUpdateStatus = async (row) => {
-    if (row?.status?.props?.children === "approved") {
+  const handleUpdateStatus = async (row, status) => {
+    if (row?.status?.props?.children === status) {
       return setToast({
         active: true,
-        message: "Leave already approved!",
-        className: "bg_green_gradient text-white",
+        message: `Leave already ${status}!`,
+        className: "bg-yellow-200 text-black",
       });
     }
     const response = await fetch("/api/leave", {
@@ -99,14 +95,25 @@ const LeaveManagement = () => {
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ _id: row._id, status: "approved" }),
+      body: JSON.stringify({ _id: row._id, status }),
     });
     const data = await response.json();
+    console.log("🚀 ~ file: page.jsx:101 ~ handleUpdateStatus ~ data:", data);
     if (data.success) {
+      setLeaveData((prev) =>
+        prev.map((d) => {
+          if (d._id === row._id) {
+            return { ...d, status };
+          }
+          return d;
+        })
+      );
       setToast({
         active: true,
-        message: "Leave successfully approved!",
-        className: "bg_green_gradient text-white",
+        message: `Leave successfully ${status}!`,
+        className: `${
+          status === "approved" ? "bg_green_gradient" : "bg-red-400"
+        } text-white`,
       });
     }
   };
@@ -117,15 +124,16 @@ const LeaveManagement = () => {
       onClick: handleEdit,
       title: "Edit",
     },
-    // {
-    //   label: <HiOutlineTrash className="text-xl" />,
-    //   onClick: handleDelete,
-    //   title: "Delete",
-    // },
+
     {
-      label: <BsCheck className="text-xl" />,
-      onClick: handleUpdateStatus,
+      label: <AiOutlineCheck className="text-xl" />,
+      onClick: (row) => handleUpdateStatus(row, "approved"),
       title: "Approve",
+    },
+    {
+      label: <RxCross2 className="text-xl" />,
+      onClick: (row) => handleUpdateStatus(row, "rejected"),
+      title: "Reject",
     },
   ];
 
@@ -176,11 +184,11 @@ const LeaveManagement = () => {
               endDate: new Date(leave.endDate).toLocaleDateString(),
               status: (
                 <span
-                  className={
-                    leave.status === "pending"
-                      ? "orange_gradient"
-                      : "green_gradient"
-                  }
+                  className={`${
+                    leave.status === "pending" && "orange_gradient"
+                  } ${leave.status === "approved" && "green_gradient"} ${
+                    leave.status === "rejected" && "text-red-500"
+                  } capitalize`}
                 >
                   {leave.status}
                 </span>

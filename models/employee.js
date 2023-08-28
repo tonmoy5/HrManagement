@@ -9,6 +9,10 @@ const EmployeeSchema = new Schema({
     type: String,
     required: [true, "Email is required."],
   },
+  phone: {
+    type: String,
+    required: [true, "Phone is required."],
+  },
   designation: {
     type: Schema.Types.ObjectId,
     ref: "Designation",
@@ -41,11 +45,14 @@ const EmployeeSchema = new Schema({
   },
   taxInformation: {
     type: String,
-    required: [true, "Tax information is required."],
   },
   allowances: {
     type: Number,
     required: [true, "Allowances is required and must be a numerical value."],
+  },
+  overtimeRate: {
+    type: Number,
+    default: 500,
   },
   address: {
     type: String,

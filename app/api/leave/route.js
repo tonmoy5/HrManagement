@@ -112,8 +112,8 @@ export const PUT = async (req) => {
     const { _id, employeeId, startDate, endDate, halfDay, reason, status } =
       await req.json();
     if (!_id || !employeeId || !startDate || !endDate || !reason) {
-      if (status === "approved") {
-        await Leave.findByIdAndUpdate(_id, { status: "approved" });
+      if (status === "approved" || status === "rejected") {
+        await Leave.findByIdAndUpdate(_id, { status });
         return new Response(
           JSON.stringify({
             success: true,

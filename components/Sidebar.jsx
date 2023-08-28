@@ -3,14 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  AiOutlineCalendar,
   AiOutlineDashboard,
   AiOutlineDollar,
   AiOutlineUser,
 } from "react-icons/ai";
 
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
-import { LiaUserEditSolid } from "react-icons/lia";
+import { LiaUserEditSolid, LiaUsersSolid } from "react-icons/lia";
 import { MdArrowForwardIos } from "react-icons/md";
 import { TbUserShare } from "react-icons/tb";
 
@@ -21,7 +20,7 @@ const links = [
   { name: "Dashboard", icon: AiOutlineDashboard, href: "/" },
   {
     name: "Employee",
-    icon: AiOutlineUser,
+    icon: LiaUsersSolid,
     submenu: [
       { name: "Designation", href: "/employee/designation" },
       { name: "Add Employee", href: "/employee/add" },
@@ -43,7 +42,8 @@ const links = [
   },
   { name: "Payouts", icon: AiOutlineDollar, href: "/payouts" },
   { name: "Leaves", icon: TbUserShare, href: "/leaves" },
-  { name: "Calendar", icon: AiOutlineCalendar, href: "/calendar" },
+  { name: "Profile", icon: AiOutlineUser, href: "/profile" },
+  // { name: "Calendar", icon: AiOutlineCalendar, href: "/calendar" },
   // Add more links here
 ];
 const Sidebar = ({ isOpen, setIsOpen }) => {

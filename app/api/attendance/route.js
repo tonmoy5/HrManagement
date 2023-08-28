@@ -1,19 +1,19 @@
 // api/attendance.js
 
 import Attendance from "@models/attendance";
-import Employee from "@models/employee";
 import { connectToDB } from "@utils/database";
 
-export const GET = async (req) => {
+// api/attendance.js
+
+export const GET = async (request) => {
   try {
     await connectToDB();
 
-    // Extract the startDate, endDate, and employeeId query parameters from the request URL
-    const url = new URL(req.url);
-    const searchParams = new URLSearchParams(url.search);
-    const startDate = searchParams.get("startDate");
-    const endDate = searchParams.get("endDate");
-    const employeeId = searchParams.get("employeeId");
+    const startDate = request.nextUrl.searchParams?.get("startDate");
+    const endDate = request.nextUrl.searchParams?.get("endDate");
+    const employeeId = request.nextUrl.searchParams?.get("employeeId");
+    const limit = parseInt(request.nextUrl.searchParams?.get("limit")); // Allow limit to be provided
+    // No need for page parameter in this case
 
     // Prepare the query object to filter by date range and employeeId
     const query = {};
@@ -27,11 +27,16 @@ export const GET = async (req) => {
       query.employee = employeeId;
     }
 
-    // Fetch the attendance data with the specified date range and employeeId
-    await Employee.countDocuments();
-    const attendances = await Attendance.find(query)
+    // Fetch the attendance data with the specified filters and optional limit
+    let attendancesQuery = Attendance.find(query)
       .populate("employee")
       .sort({ date: "desc" });
+
+    if (limit) {
+      attendancesQuery = attendancesQuery.limit(limit);
+    }
+
+    const attendances = await attendancesQuery;
 
     return new Response(
       JSON.stringify({

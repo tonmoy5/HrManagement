@@ -45,6 +45,7 @@ export const PUT = async (req, { params }) => {
     taxInformation,
     allowances,
     address,
+    phone,
   } = await req.json();
 
   try {
@@ -65,6 +66,7 @@ export const PUT = async (req, { params }) => {
     // Update the fields with the new values
     existingEmployee.fullName = fullName;
     existingEmployee.email = email;
+    existingEmployee.phone = phone;
     existingEmployee.designation = designation;
     existingEmployee.department = department;
     existingEmployee.joiningDate = joiningDate;

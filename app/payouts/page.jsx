@@ -27,6 +27,10 @@ const Payroll = () => {
         `/api/payroll/new?month=${selectedMonth.toISOString()}`
       );
       const json = await response.json();
+      console.log(
+        "🚀 ~ file: page.jsx:30 ~ handleGeneratePayroll ~ json:",
+        json
+      );
 
       setData(json.data || []);
     } catch (error) {

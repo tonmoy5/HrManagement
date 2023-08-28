@@ -39,8 +39,6 @@ export const authOptions = {
               name: user.username,
               email: user.email,
               role: user.role,
-              image:
-                "https://cdn3.iconfinder.com/data/icons/avatars-collection/256/22-512.png",
             };
           } else {
             // If the user is not found or password doesn't match, return null

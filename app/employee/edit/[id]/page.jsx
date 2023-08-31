@@ -1,5 +1,7 @@
 "use client";
 import Alert from "@components/Alert";
+import { updateEmployeeData } from "@utils/api/employee";
+import { AnimatePresence } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -100,17 +102,7 @@ const EditEmployee = () => {
 
     try {
       // Make a PUT request to the backend API
-      const response = await fetch(`/api/employee/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit form data.");
-      }
+      const response = await updateEmployeeData({ employeeId, formData });
 
       setToast({
         active: true,
@@ -137,12 +129,16 @@ const EditEmployee = () => {
 
   return (
     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 relative">
-      <Alert
-        className={toast.className}
-        handleClose={() => setToast({ active: false, message: "" })}
-        isAlertOpen={toast.active}
-        message={toast.message}
-      />
+      <AnimatePresence>
+        {toast.active && (
+          <Alert
+            className={toast.className}
+            handleClose={() => setToast({ active: false, message: "" })}
+            isAlertOpen={toast.active}
+            message={toast.message}
+          />
+        )}
+      </AnimatePresence>
       <div
         className={`absolute w-full top-0 left-0 h-1 duration-300 bg-blue-500`}
         style={{ width: `${(currentStep / totalSteps) * 100}%` }}

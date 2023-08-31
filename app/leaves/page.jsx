@@ -4,10 +4,13 @@ import LeaveForm from "@components/LeaveForm";
 
 import Modal from "@components/Modal";
 import Table from "@components/Table";
+import AddButton from "@components/atoms/AddButton";
+import EmployeeSelect from "@components/molecules/EmployeeSelect";
+import { getLeaveData } from "@utils/api/leave";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
 import { GoPencil } from "react-icons/go";
-import { IoMdAdd } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 const LeaveManagement = () => {
   const headers = [
@@ -22,6 +25,9 @@ const LeaveManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState(null);
 
+  const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [selectedEmployee, setSelectedEmployee] = useState(new Date());
+
   const [toast, setToast] = useState({
     active: false,
     message: "",
@@ -32,9 +38,12 @@ const LeaveManagement = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/leave");
-        const json = await response.json();
-        setLeaveData(json.data);
+        const data = await getLeaveData({
+          month: selectedMonth,
+          employeeId: selectedEmployee.value || "",
+        });
+
+        setLeaveData(data.data);
       } catch (error) {
         console.error("Error fetching leave data:", error);
       } finally {
@@ -42,7 +51,7 @@ const LeaveManagement = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [selectedMonth, selectedEmployee.value]);
 
   const handleOpenModal = () => {
     setSelectedLeave(null);
@@ -139,12 +148,16 @@ const LeaveManagement = () => {
 
   return (
     <section className="p-5 bg-white rounded shadow">
-      <Alert
-        className={toast.className}
-        handleClose={() => setToast((p) => ({ ...p, active: false }))}
-        isAlertOpen={toast.active}
-        message={toast.message}
-      />
+      <AnimatePresence>
+        {toast.active && (
+          <Alert
+            className={toast.className}
+            handleClose={() => setToast({ active: false, message: "" })}
+            isAlertOpen={toast.active}
+            message={toast.message}
+          />
+        )}
+      </AnimatePresence>
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -161,13 +174,21 @@ const LeaveManagement = () => {
         <h1 className="font-bold text-lg blue_gradient w-max">
           Leave Management
         </h1>
-        <button
-          onClick={handleOpenModal}
-          className="btn_green text-sm flex items-center gap-2"
-        >
-          <IoMdAdd className="font-bold" />
-          Add Leave Request
-        </button>
+        <AddButton onClick={handleOpenModal} label="Add Leave Request" />
+      </div>
+      <div className="flex justify-between items-center md:flex-nowrap flex-wrap mb-3">
+        <div className="flex flex-col md:space-x-0 space-x-4 mb-5 md:w-max ">
+          <h3 className="text-sm">Filter by Month</h3>
+          <input
+            type="month"
+            value={selectedMonth.toISOString().slice(0, 7)}
+            onChange={(e) => setSelectedMonth(new Date(e.target.value))}
+            className="outline-none border-gray-400 rounded shadow-sm py-2 px-2 text-gray-600 text-sm border "
+          />
+        </div>
+        <div className="md:w-[300px] w-full md:mb-0 mb-5">
+          <EmployeeSelect onChange={setSelectedEmployee} />
+        </div>
       </div>
 
       {loading ? (

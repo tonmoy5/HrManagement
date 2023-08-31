@@ -3,10 +3,11 @@ import Alert from "@components/Alert";
 import Modal from "@components/Modal";
 import Table from "@components/Table";
 import TableLoader from "@components/TableLoader";
+import AddButton from "@components/atoms/AddButton";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { GoPencil } from "react-icons/go";
 import { HiOutlineTrash } from "react-icons/hi";
-import { IoMdAdd } from "react-icons/io";
 
 const Department = () => {
   const headers = ["Name", "Description"];
@@ -121,22 +122,20 @@ const Department = () => {
         onSuccess={onDeleteSuccess}
         row={selectedRow}
       />
-      <Alert
-        className={"bg-green-100 text-green-600"}
-        message={alert.message}
-        isAlertOpen={alert.active}
-        handleClose={() => setAlert({ active: false, message: "" })}
-      />
+      <AnimatePresence>
+        {toast.active && (
+          <Alert
+            className={toast.className}
+            handleClose={() => setToast({ active: false, message: "" })}
+            isAlertOpen={toast.active}
+            message={toast.message}
+          />
+        )}
+      </AnimatePresence>
 
       <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
         <h1 className="font-bold text-lg blue_gradient w-max">Departments</h1>
-        <button
-          onClick={handleOpenModal}
-          className="btn_green text-sm flex items-center gap-2"
-        >
-          <IoMdAdd className="font-bold" />
-          Add Department
-        </button>
+        <AddButton onClick={handleOpenModal} label={"Add Department"} />
       </div>
 
       {loading ? (

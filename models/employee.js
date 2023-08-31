@@ -8,10 +8,19 @@ const EmployeeSchema = new Schema({
   email: {
     type: String,
     required: [true, "Email is required."],
+    unique: [true, "Email already exists"],
   },
   phone: {
     type: String,
     required: [true, "Phone is required."],
+  },
+  gender: {
+    enum: ["male", "female"],
+    // required: [true, "Gender is required."],
+  },
+  address: {
+    type: String,
+    required: [true, "Address is required."],
   },
   designation: {
     type: Schema.Types.ObjectId,
@@ -25,26 +34,20 @@ const EmployeeSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  status: {
+    type: String,
+    enum: ["active", "inactive", "on leave", "terminated", "other"],
+    default: "active",
+  },
+  inactiveDate: {
+    type: Date,
+  },
+  terminatedDate: {
+    type: Date,
+  },
   salary: {
     type: Number,
     required: [true, "Salary is required and must be a numerical value."],
-  },
-  bankAccount: {
-    accountNumber: {
-      type: String,
-      required: [true, "Bank account number is required."],
-    },
-    accountName: {
-      type: String,
-      required: [true, "Bank account name is required."],
-    },
-    branch: {
-      type: String,
-      required: [true, "Branch information is required."],
-    },
-  },
-  taxInformation: {
-    type: String,
   },
   allowances: {
     type: Number,
@@ -54,10 +57,28 @@ const EmployeeSchema = new Schema({
     type: Number,
     default: 500,
   },
-  address: {
+  taxInformation: {
     type: String,
-    required: [true, "Address is required."],
   },
+  bankAccount: {
+    accountName: {
+      type: String,
+      required: [true, "Bank account name is required."],
+    },
+    accountNumber: {
+      type: String,
+      required: [true, "Bank account number is required."],
+    },
+    bankName: {
+      type: String,
+      required: [true, "Bank name is required."],
+    },
+    branchInfo: {
+      type: String,
+      required: [true, "Branch Info is required."],
+    },
+  },
+
   payrollHistory: [
     {
       type: Schema.Types.ObjectId,

@@ -4,18 +4,18 @@ const UserSchema = new Schema({
   username: {
     type: String,
     required: [true, "Username is required."],
-    unique: true,
+    unique: [true, "Username already exists"],
   },
   email: {
     type: String,
     required: [true, "Email is required."],
-    unique: true,
+    unique: [true, "Email already exists"],
   },
   password: {
     type: String,
     required: [true, "Password is required."],
   },
-  twitter: {
+  image: {
     type: String,
   },
   website: {
@@ -24,13 +24,16 @@ const UserSchema = new Schema({
   github: {
     type: String,
   },
+  twitter: {
+    type: String,
+  },
+  linkedin: {
+    type: String,
+  },
   role: {
     type: String,
     enum: ["admin", "employee"],
     default: "employee",
-  },
-  image: {
-    type: String, // Store image data as base64 encoded string
   },
 });
 

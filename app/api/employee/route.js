@@ -1,9 +1,11 @@
 import Department from "@models/department";
 import Designation from "@models/designation";
 import Employee from "@models/employee";
+import User from "@models/user";
 import { connectToDB } from "@utils/database";
+import bcrypt from "bcrypt";
 
-export const GET = async (req) => {
+export const GET = async (request) => {
   try {
     await connectToDB();
     await Designation.countDocuments();
@@ -32,42 +34,70 @@ export const GET = async (req) => {
   }
 };
 
-export const POST = async (req) => {
+export const POST = async (request) => {
   const {
     fullName,
     email,
     phone,
+    gender,
+    address,
     designation,
     department,
     joiningDate,
+    status,
     salary,
-    bankAccount,
-    taxInformation,
     allowances,
-    address,
-  } = await req.json();
+    overtimeRate,
+    bankAccount,
+    // for create new user
+    image,
+    username,
+    password,
+    website,
+    github,
+    twitter,
+    linkedin,
+  } = await request.json();
 
   try {
     await connectToDB();
+
     const newEmployee = new Employee({
       fullName,
       email,
+      phone,
+      gender,
+      address,
       designation,
       department,
       joiningDate,
+      status,
       salary,
-      bankAccount,
-      taxInformation,
       allowances,
-      address,
-      phone,
+      overtimeRate,
+      bankAccount,
+    });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      email,
+      image,
+      username,
+      password: hashedPassword,
+      website,
+      github,
+      twitter,
+      linkedin,
     });
     await newEmployee.save();
+    await newUser.save();
+
     return new Response(
       JSON.stringify({
         success: true,
         message: "Employee added successfully",
-        data: newEmployee,
+        data: { ...newEmployee, ...newUser },
       }),
       { status: 201 }
     );

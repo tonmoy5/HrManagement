@@ -1,6 +1,7 @@
 "use client";
 
 import Alert from "@components/Alert";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const WelcomeAlert = () => {
@@ -19,12 +20,16 @@ const WelcomeAlert = () => {
   }, []);
 
   return (
-    <Alert
-      className={toast.className}
-      isAlertOpen={toast.active}
-      handleClose={() => setToast((p) => ({ ...p, active: false }))}
-      message={toast.message}
-    />
+    <AnimatePresence>
+      {toast.active && (
+        <Alert
+          className={toast.className}
+          handleClose={() => setToast({ active: false, message: "" })}
+          isAlertOpen={toast.active}
+          message={toast.message}
+        />
+      )}
+    </AnimatePresence>
   );
 };
 

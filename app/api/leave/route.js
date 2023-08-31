@@ -9,20 +9,28 @@ export const GET = async (req) => {
     await connectToDB();
     await Employee.countDocuments();
 
-    // Extract the startDate and endDate query parameters from the request URL
-    const { startDate = "", endDate = "" } = req.query || {};
-    // Prepare the query object to filter by date range
+    const month = req.nextUrl.searchParams?.get("month");
+    const employeeId = req.nextUrl.searchParams?.get("employeeId");
+
     const query = {};
-    if (startDate && endDate) {
-      query.startDate = {
-        $gte: new Date(startDate),
-      };
-      query.endDate = {
-        $lte: new Date(endDate),
-      };
+
+    if (month) {
+      // Filter by month
+      const startOfMonth = new Date(month);
+      startOfMonth.setDate(1);
+      const endOfMonth = new Date(month);
+      endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+      endOfMonth.setDate(0);
+
+      query.startDate = { $gte: startOfMonth, $lte: endOfMonth };
     }
 
-    // Fetch the leave records with the specified date range
+    if (employeeId) {
+      // Filter by employee ID
+      query.employee = employeeId;
+    }
+
+    // Fetch the leave records with the specified filters
     const leaves = await Leave.find(query).populate("employee");
 
     return new Response(

@@ -2,13 +2,13 @@
 import Modal from "@components/Modal";
 import Table from "@components/Table";
 import TableLoader from "@components/TableLoader";
+import AddButton from "@components/atoms/AddButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiUser } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
 import { GoPencil } from "react-icons/go";
-import { IoMdAdd } from "react-icons/io";
 
 const Employees = () => {
   const headers = ["Full Name", "Email", "Designation"];
@@ -63,16 +63,12 @@ const Employees = () => {
 
   return (
     <section className="p-5 bg-white rounded shadow">
-      <Link
-        href={"/employee/add"}
-        className="flex flex-col sm:flex-row justify-between items-center mb-5"
-      >
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
         <h1 className="font-bold text-lg blue_gradient w-max">Employees</h1>
-        <button className="btn_green text-sm flex items-center gap-2">
-          <IoMdAdd className="font-bold" />
-          Add Employee
-        </button>
-      </Link>
+        <Link href={"/employee/add"}>
+          <AddButton label="Add Employee" />
+        </Link>
+      </div>
 
       {loading ? (
         <TableLoader headers={headers} rows={4} actionButtons={actionButtons} />

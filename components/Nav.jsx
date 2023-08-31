@@ -119,7 +119,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
                 </li>
                 <li>
                   <Link
-                    href={"/"}
+                    href={"/setting"}
                     className=" py-2 px-4 hover:bg-indigo-100 hover:text-indigo-500 w-full text-sm flex items-center gap-2"
                   >
                     <AiOutlineSetting className="text-lg" />

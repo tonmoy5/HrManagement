@@ -3,10 +3,11 @@ import Alert from "@components/Alert";
 import Modal from "@components/Modal";
 import Table from "@components/Table";
 import TableLoader from "@components/TableLoader";
+import AddButton from "@components/atoms/AddButton";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { GoPencil } from "react-icons/go";
 import { HiOutlineTrash } from "react-icons/hi";
-import { IoMdAdd } from "react-icons/io";
 
 const Designation = () => {
   const headers = ["Title", "Details"];
@@ -16,7 +17,7 @@ const Designation = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
-  const [alert, setAlert] = useState({ active: false, message: "" });
+  const [toast, setToast] = useState({ active: false, message: "" });
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -46,7 +47,7 @@ const Designation = () => {
       setData((prevData) => [...prevData, updatedData.data]);
     }
     handleCloseModal();
-    setAlert({
+    setToast({
       active: true,
       message: index !== -1 ? "Update success" : "Add success",
     });
@@ -78,7 +79,7 @@ const Designation = () => {
     setIsDeleteModalOpen(false);
     setSelectedRow(null);
     setData((prev) => prev.filter((r) => r._id !== row._id));
-    setAlert({ active: true, message: "Delete Success!" });
+    setToast({ active: true, message: "Delete Success!" });
   };
 
   const handleDelete = (row) => {
@@ -120,22 +121,20 @@ const Designation = () => {
         onSuccess={onDeleteSuccess}
         row={selectedRow}
       />
-      <Alert
-        className={"bg-green-100 text-green-600"}
-        message={alert.message}
-        isAlertOpen={alert.active}
-        handleClose={() => setAlert({ active: false, message: "" })}
-      />
+      <AnimatePresence>
+        {toast.active && (
+          <Alert
+            className={toast.className}
+            handleClose={() => setToast({ active: false, message: "" })}
+            isAlertOpen={toast.active}
+            message={toast.message}
+          />
+        )}
+      </AnimatePresence>
 
       <div className="flex flex-col sm:flex-row justify-between items-center mb-5">
         <h1 className="font-bold text-lg blue_gradient w-max">Designations</h1>
-        <button
-          onClick={handleOpenModal}
-          className="btn_green text-sm flex items-center gap-2"
-        >
-          <IoMdAdd className="font-bold" />
-          Add Designation
-        </button>
+        <AddButton onClick={handleOpenModal} label={"Add Designation"} />
       </div>
 
       {loading ? (

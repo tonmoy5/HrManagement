@@ -1,8 +1,8 @@
 "use client";
 import Table from "@components/Table";
 import TableLoader from "@components/TableLoader";
+import AddButton from "@components/atoms/AddButton";
 import { useState } from "react";
-import { IoMdAdd } from "react-icons/io";
 
 const Payroll = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
@@ -52,13 +52,7 @@ const Payroll = () => {
             onChange={(e) => setSelectedMonth(new Date(e.target.value))}
             className="outline-none border-gray-400 rounded shadow-sm py-2 px-2 text-gray-600 text-sm border "
           />
-          <button
-            onClick={handleGeneratePayroll}
-            className="btn_green text-sm flex items-center gap-2"
-          >
-            <IoMdAdd className="font-bold" />
-            Generate
-          </button>
+          <AddButton onClick={handleGeneratePayroll} label="Generate" />
         </div>
       </div>
 

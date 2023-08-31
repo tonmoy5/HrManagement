@@ -1,16 +1,13 @@
 "use client";
 import AttendanceForm from "@components/AttendanceForm";
 import AttendanceLogTable from "@components/AttendanceLogTable";
-import { getAttendanceData, getEmployeesData } from "@utils/api";
+import { getAttendanceData } from "@utils/api/attendance";
+import { getEmployeesData } from "@utils/api/employee";
 import { useEffect, useState } from "react";
 
 const AttendanceFormPage = () => {
   const [employeesData, setEmployeesData] = useState({ data: [] });
   const [attendanceData, setAttendanceData] = useState([]);
-  console.log(
-    "🚀 ~ file: page.jsx:10 ~ AttendanceFormPage ~ setAttendanceData:",
-    attendanceData
-  );
 
   useEffect(() => {
     // Fetch employees data

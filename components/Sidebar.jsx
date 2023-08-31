@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   AiOutlineDashboard,
   AiOutlineDollar,
+  AiOutlineSetting,
   AiOutlineUser,
 } from "react-icons/ai";
 
@@ -43,6 +44,7 @@ const links = [
   { name: "Payouts", icon: AiOutlineDollar, href: "/payouts" },
   { name: "Leaves", icon: TbUserShare, href: "/leaves" },
   { name: "Profile", icon: AiOutlineUser, href: "/profile" },
+  { name: "Setting", icon: AiOutlineSetting, href: "/setting" },
   // { name: "Calendar", icon: AiOutlineCalendar, href: "/calendar" },
   // Add more links here
 ];

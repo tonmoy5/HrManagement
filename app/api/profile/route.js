@@ -1,3 +1,5 @@
+// /api/profile
+
 import Employee from "@models/employee";
 import User from "@models/user";
 import { connectToDB } from "@utils/database";
@@ -18,7 +20,9 @@ export async function GET(request) {
 
     const [user, employee] = await Promise.all([
       User.findOne({ email }),
-      Employee.findOne({ email }).populate("designation"),
+      Employee.findOne({ email })
+        .populate("designation")
+        .populate("department"),
     ]);
 
     if (!user && !employee) {
@@ -34,6 +38,7 @@ export async function GET(request) {
       image: user?.image,
       fullName: employee?.fullName || "Admin",
       designation: employee?.designation?.title || "Not Available",
+      department: employee?.department?.name || "Not Available",
       joiningDate: employee?.joiningDate || "Not Available",
       address: employee?.address || "Not Available",
       phone: employee?.phone || "Not Available",

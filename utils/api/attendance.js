@@ -1,11 +1,4 @@
-export async function getEmployeesData() {
-  const res = await fetch("/api/employee");
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
-}
+// /utils/api/attendance
 
 export async function getAttendanceData(params) {
   const queryString = new URLSearchParams(params).toString();

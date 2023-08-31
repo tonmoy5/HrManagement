@@ -1,6 +1,7 @@
 import Department from "@models/department";
 import Designation from "@models/designation";
 import Employee from "@models/employee";
+import User from "@models/user";
 import { connectToDB } from "@utils/database";
 
 export const GET = async (req, { params }) => {
@@ -37,15 +38,24 @@ export const PUT = async (req, { params }) => {
   const {
     fullName,
     email,
+    phone,
+    gender,
+    address,
     designation,
     department,
     joiningDate,
+    status,
     salary,
-    bankAccount,
-    taxInformation,
     allowances,
-    address,
-    phone,
+    overtimeRate,
+    bankAccount,
+    // for create new user
+    image,
+    username,
+    website,
+    github,
+    twitter,
+    linkedin,
   } = await req.json();
 
   try {
@@ -67,23 +77,40 @@ export const PUT = async (req, { params }) => {
     existingEmployee.fullName = fullName;
     existingEmployee.email = email;
     existingEmployee.phone = phone;
+    existingEmployee.gender = gender;
+    existingEmployee.address = address;
+
     existingEmployee.designation = designation;
     existingEmployee.department = department;
     existingEmployee.joiningDate = joiningDate;
+    existingEmployee.status = status;
+
     existingEmployee.salary = salary;
-    existingEmployee.bankAccount = bankAccount;
-    existingEmployee.taxInformation = taxInformation;
     existingEmployee.allowances = allowances;
-    existingEmployee.address = address;
+    existingEmployee.overtimeRate = overtimeRate;
+    existingEmployee.taxInformation = taxInformation;
+
+    existingEmployee.bankAccount = bankAccount;
 
     // Save the updated document
     const updatedEmployee = await existingEmployee.save();
+
+    const existingUser = await User.findOne({ email: existingEmployee.email });
+
+    existingUser.image = image;
+    existingUser.username = username;
+    existingUser.website = website;
+    existingUser.github = github;
+    existingUser.twitter = twitter;
+    existingUser.linkedin = linkedin;
+
+    const updatedUser = await existingUser.save();
 
     return new Response(
       JSON.stringify({
         success: true,
         message: "Employee updated successfully",
-        data: updatedEmployee,
+        data: { ...updatedEmployee, ...updatedUser },
       }),
       { status: 200 }
     );

@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Alert from "./Alert";
@@ -155,12 +156,16 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
 
   return (
     <div>
-      <Alert
-        className={toast.className}
-        handleClose={() => setToast({ active: false, message: "" })}
-        isAlertOpen={toast.active}
-        message={toast.message}
-      />
+      <AnimatePresence>
+        {toast.active && (
+          <Alert
+            className={toast.className}
+            handleClose={() => setToast({ active: false, message: "" })}
+            isAlertOpen={toast.active}
+            message={toast.message}
+          />
+        )}
+      </AnimatePresence>
       <form onSubmit={handleSubmit} className="space-y-4 md:w-1/2 w-full">
         <div>
           <label htmlFor="employee" className="text-gray-700 font-medium">

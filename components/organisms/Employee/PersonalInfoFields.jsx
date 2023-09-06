@@ -1,11 +1,11 @@
 "use client";
-import InputLabel from "@components/atoms/InputLabel";
-import InputTextArea from "@components/atoms/InputTextArea";
-import LabeledInput from "@components/molecules/LabeledInput";
-import { checkExistsEmployee } from "@utils/api/employee";
-import { uploadFileToServer } from "@utils/api/general";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import InputLabel from "../../../components/atoms/InputLabel";
+import InputTextArea from "../../../components/atoms/InputTextArea";
+import LabeledInput from "../../../components/molecules/LabeledInput";
+import { checkExistsEmployee } from "../../../utils/api/employee";
+import { uploadFileToServer } from "../../../utils/api/general";
 
 const PersonalInfoFields = React.memo(({ formData, setFormData }) => {
   const [uploading, setUploading] = useState(false);
@@ -23,16 +23,13 @@ const PersonalInfoFields = React.memo(({ formData, setFormData }) => {
     }, 1000); // Adjust the debounce delay here (in milliseconds)
 
     return () => clearTimeout(delayDebounceFn);
-  }, [formData.email]);
+  }, [formData?.email]);
 
   const handleUpload = async (e) => {
     setUploading(true);
     try {
       const resData = await uploadFileToServer(e.target.files, formData.email);
-      console.log(
-        "🚀 ~ file: PersonalInfoFields.jsx:32 ~ handleUpload ~ resData:",
-        resData
-      );
+
       setFormData((p) => ({ ...p, image: `${resData.url}` }));
     } catch (err) {
       console.log(err);
@@ -40,6 +37,8 @@ const PersonalInfoFields = React.memo(({ formData, setFormData }) => {
       setUploading(false);
     }
   };
+
+  if (!formData) return <p>Form data not provided</p>;
 
   return (
     <div className="mb-5 rounded-md border border-[#ebedf2] bg-white p-4 gap-5 ">

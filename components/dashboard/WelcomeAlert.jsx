@@ -1,11 +1,10 @@
 "use client";
 
-import Alert from "@components/Alert";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import Alert from "../../components/Alert";
 
 const WelcomeAlert = () => {
-  console.log("welcome alter ");
   const [toast, setToast] = useState({
     active: false,
     message: "Welcome back admin!",
@@ -13,7 +12,6 @@ const WelcomeAlert = () => {
   });
   useEffect(() => {
     if (localStorage.getItem("login") === "true") {
-      console.log("login success");
       setToast((p) => ({ ...p, active: true }));
       localStorage.removeItem("login");
     }

@@ -1,13 +1,13 @@
 "use client";
-import Alert from "@components/Alert";
-import Modal from "@components/Modal";
-import Table from "@components/Table";
-import TableLoader from "@components/TableLoader";
-import AddButton from "@components/atoms/AddButton";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { GoPencil } from "react-icons/go";
 import { HiOutlineTrash } from "react-icons/hi";
+import Alert from "../../../components/Alert";
+import Modal from "../../../components/Modal";
+import Table from "../../../components/Table";
+import TableLoader from "../../../components/TableLoader";
+import AddButton from "../../../components/atoms/AddButton";
 
 const Designation = () => {
   const headers = ["Title", "Details"];

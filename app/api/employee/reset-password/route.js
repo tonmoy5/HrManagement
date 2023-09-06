@@ -1,10 +1,10 @@
 // /api/profile/reset-password
 
-import { getSession } from "@auth/cookies"; // Assuming you have a way to retrieve session information
-import User from "@models/user";
-import { connectToDB } from "@utils/database";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
+import { getSession } from "../../../../auth/cookies";
+import User from "../../../../models/user";
+import { connectToDB } from "../../../../utils/database";
 
 export async function PUT(request) {
   try {

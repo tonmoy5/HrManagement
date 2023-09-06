@@ -1,9 +1,9 @@
 // // api/payroll/route.js
 
-// import Attendance from "@models/attendance";
-// import Employee from "@models/employee";
-// import Payroll from "@models/payroll";
-// import { connectToDB } from "@utils/database";
+// import Attendance from "../../../../models/attendance";
+// import Employee from "../../../../models/employee";
+// import Payroll from "../../../../models/payroll";
+// import { connectToDB } from "../utils/database";
 
 // export const GET = async (req) => {
 //   try {

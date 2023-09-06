@@ -1,7 +1,7 @@
 // /api/employee/check-leave
-import Leave from "@models/leave";
-import { connectToDB } from "@utils/database";
 import { NextResponse } from "next/server";
+import Leave from "../../../../models/leave";
+import { connectToDB } from "../../../../utils/database";
 
 export async function GET(request) {
   // Connect to the database

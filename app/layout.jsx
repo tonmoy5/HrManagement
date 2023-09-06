@@ -1,11 +1,12 @@
-import DashboardLayout from "@components/dashboard/DashboardLayout";
-import Provider from "@components/Provider";
-import TopLoadingBar from "@components/TopLoadingBar";
-import "@styles/global.css";
+import Provider from "../components/Provider";
+import TopLoadingBar from "../components/TopLoadingBar";
+import DashboardLayout from "../components/dashboard/DashboardLayout";
+import { UserProvider } from "../context/UserContext";
+import "../styles/global.css";
 export const metadata = {
   title: {
     template: "HRM | %s ",
-    default: "HRM", // a default is required when creating a template
+    default: "HRM",
   },
 };
 
@@ -16,7 +17,9 @@ const RootLayout = ({ children }) => {
         <TopLoadingBar />
         <main className=" text-[#0e1726]">
           <Provider>
-            <DashboardLayout children={children} />
+            <UserProvider>
+              <DashboardLayout children={children} />
+            </UserProvider>
           </Provider>
         </main>
       </body>

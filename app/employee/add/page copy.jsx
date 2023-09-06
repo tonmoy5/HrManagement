@@ -1,8 +1,8 @@
 "use client";
-import Alert from "@components/Alert";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Alert from "../components/Alert";
 
 const EmployeeForm = () => {
   const [formData, setFormData] = useState({

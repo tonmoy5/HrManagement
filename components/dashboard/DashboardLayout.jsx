@@ -1,10 +1,10 @@
 "use client";
 
-import { useNavigationEvent } from "@hooks/useNavigationEvent";
-import useOutsideClick from "@hooks/useOutsideClick";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useNavigationEvent } from "../../hooks/useNavigationEvent";
+import useOutsideClick from "../../hooks/useOutsideClick";
 import Nav from "../Nav";
 import Preloader from "../PreLoader";
 import Sidebar from "../Sidebar";

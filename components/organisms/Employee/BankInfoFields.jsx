@@ -1,5 +1,5 @@
-import LabeledInput from "@components/molecules/LabeledInput";
 import React from "react";
+import LabeledInput from "../../molecules/LabeledInput";
 
 const BankInfoFields = React.memo(({ formData, setFormData }) => {
   return (

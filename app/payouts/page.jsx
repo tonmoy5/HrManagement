@@ -1,8 +1,8 @@
 "use client";
-import Table from "@components/Table";
-import TableLoader from "@components/TableLoader";
-import AddButton from "@components/atoms/AddButton";
 import { useState } from "react";
+import Table from "../../components/Table";
+import TableLoader from "../../components/TableLoader";
+import AddButton from "../../components/atoms/AddButton";
 
 const Payroll = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date());

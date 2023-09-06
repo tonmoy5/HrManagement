@@ -16,6 +16,7 @@ import { TbUserShare } from "react-icons/tb";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { useUserContext } from "../context/UserContext";
 // Array of links
 const links = [
   { name: "Dashboard", icon: AiOutlineDashboard, href: "/" },
@@ -70,6 +71,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const [expanded, setExpanded] = useState(
     findActiveSubmenu === -1 ? 0 : findActiveSubmenu
   );
+  const { user } = useUserContext();
   return (
     <div
       className={`${

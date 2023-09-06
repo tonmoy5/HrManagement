@@ -1,5 +1,5 @@
-import LabeledInput from "@components/molecules/LabeledInput";
 import React from "react";
+import LabeledInput from "../../../components/molecules/LabeledInput";
 
 const SocialMediaFields = React.memo(({ formData, setFormData }) => {
   return (

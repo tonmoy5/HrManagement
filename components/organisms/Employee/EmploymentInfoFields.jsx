@@ -1,6 +1,9 @@
-import LabeledInput from "@components/molecules/LabeledInput";
-import { getDepartmentsData, getDesignationsData } from "@utils/api/general";
 import React, { useEffect, useState } from "react";
+import {
+  getDepartmentsData,
+  getDesignationsData,
+} from "../../../utils/api/general";
+import LabeledInput from "../../molecules/LabeledInput";
 
 const EmploymentInfoFields = React.memo(({ formData, setFormData }) => {
   const [designations, setDesignations] = useState([]);
@@ -39,9 +42,12 @@ const EmploymentInfoFields = React.memo(({ formData, setFormData }) => {
             label="Designation *"
             id="designation"
             type="select"
-            value={formData.designation}
+            value={formData.designation?._id}
             onChange={(e) =>
-              setFormData((p) => ({ ...p, designation: e.target.value }))
+              setFormData((p) => ({
+                ...p,
+                designation: { ...p.designation, _id: e.target.value },
+              }))
             }
           >
             <option value="">Select Designation</option>
@@ -55,9 +61,12 @@ const EmploymentInfoFields = React.memo(({ formData, setFormData }) => {
             label="Department *"
             id="department"
             type="select"
-            value={formData.department}
+            value={formData.department._id}
             onChange={(e) =>
-              setFormData((p) => ({ ...p, department: e.target.value }))
+              setFormData((p) => ({
+                ...p,
+                department: { ...p.department, _id: e.target.value },
+              }))
             }
           >
             <option value="">Select Department</option>

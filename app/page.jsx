@@ -1,9 +1,9 @@
-import AttendanceGraph from "@components/dashboard/AttendanceGraph";
-import DashboardCards from "@components/dashboard/DashboardCards";
-import DepartmentList from "@components/dashboard/DepartmentList";
-import DesignationList from "@components/dashboard/DesignationList";
-import LeavesGraph from "@components/dashboard/LeaveGraph";
-import WelcomeAlert from "@components/dashboard/WelcomeAlert";
+import AttendanceGraph from "../components/dashboard/AttendanceGraph";
+import DashboardCards from "../components/dashboard/DashboardCards";
+import DepartmentList from "../components/dashboard/DepartmentList";
+import DesignationList from "../components/dashboard/DesignationList";
+import LeavesGraph from "../components/dashboard/LeaveGraph";
+import WelcomeAlert from "../components/dashboard/WelcomeAlert";
 
 export const metadata = {
   title: "HRM | Dashboard",

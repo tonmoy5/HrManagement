@@ -1,6 +1,6 @@
-import Table from "@components/Table";
-import Designation from "@models/designation";
-import { connectToDB } from "@utils/database";
+import Table from "../../components/Table";
+import Designation from "../../models/designation";
+import { connectToDB } from "../../utils/database";
 
 const DesignationList = async () => {
   await connectToDB();

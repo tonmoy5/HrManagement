@@ -1,9 +1,7 @@
 // api/attendance.js
 
-import Attendance from "@models/attendance";
-import { connectToDB } from "@utils/database";
-
-// api/attendance.js
+import Attendance from "../../../models/attendance.js";
+import { connectToDB } from "../../../utils/database";
 
 export const GET = async (request) => {
   try {

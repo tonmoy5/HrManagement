@@ -1,7 +1,7 @@
 // api/payroll/new/route.js
-import Attendance from "@models/attendance";
-import Employee from "@models/employee";
-import { connectToDB } from "@utils/database";
+import Attendance from "../../../../models/attendance";
+import Employee from "../../../../models/employee";
+import { connectToDB } from "../../../../utils/database";
 
 export const GET = async (req) => {
   try {

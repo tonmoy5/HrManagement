@@ -1,14 +1,14 @@
 "use client";
-import Modal from "@components/Modal";
-import Table from "@components/Table";
-import TableLoader from "@components/TableLoader";
-import AddButton from "@components/atoms/AddButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiUser } from "react-icons/bi";
 import { FiEye } from "react-icons/fi";
 import { GoPencil } from "react-icons/go";
+import Modal from "../../components/Modal";
+import Table from "../../components/Table";
+import TableLoader from "../../components/TableLoader";
+import AddButton from "../../components/atoms/AddButton";
 
 const Employees = () => {
   const headers = ["Full Name", "Email", "Designation"];
@@ -48,14 +48,14 @@ const Employees = () => {
     {
       label: <BiUser className="text-xl" />,
       onClick: (row) => {
-        router.push(`/profile?email=${row.email}`);
+        router.push(`/profile/${row._id}`);
       },
       title: "Profile",
     },
     {
       label: <GoPencil className="text-xl" />,
       onClick: (row) => {
-        router.push(`/employee/edit/${row._id}`);
+        router.push(`/setting/${row._id}`);
       },
       title: "Edit",
     },

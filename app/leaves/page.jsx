@@ -1,17 +1,17 @@
 "use client";
-import Alert from "@components/Alert";
-import LeaveForm from "@components/LeaveForm";
+import Alert from "../../components/Alert";
+import LeaveForm from "../../components/LeaveForm";
 
-import Modal from "@components/Modal";
-import Table from "@components/Table";
-import AddButton from "@components/atoms/AddButton";
-import EmployeeSelect from "@components/molecules/EmployeeSelect";
-import { getLeaveData } from "@utils/api/leave";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { AiOutlineCheck } from "react-icons/ai";
 import { GoPencil } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
+import Modal from "../../components/Modal";
+import Table from "../../components/Table";
+import AddButton from "../../components/atoms/AddButton";
+import EmployeeSelect from "../../components/molecules/EmployeeSelect";
+import { getLeaveData } from "../../utils/api/leave";
 const LeaveManagement = () => {
   const headers = [
     "Employee Name",

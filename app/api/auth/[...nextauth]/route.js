@@ -1,9 +1,10 @@
 // /api/auth/[...nextauth]/route.js
 
-import User from "@models/user";
-import { connectToDB } from "@utils/database";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import Employee from "../../../../models/employee";
+import User from "../../../../models/user";
+import { connectToDB } from "../../../../utils/database";
 
 export const authOptions = {
   session: {
@@ -11,41 +12,36 @@ export const authOptions = {
   },
   providers: [
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
-      // name: "Credentials",
-
       type: "credentials",
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {},
       async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
         const { username, password } = credentials;
 
         try {
-          // Find the user in the database based on the provided username or email
           await connectToDB();
-          const user = await User.findOne({
-            $or: [{ username }, { email: username }],
-          });
+          let user =
+            (await Employee.findOne({
+              $or: [{ username }, { email: username }],
+            })) ||
+            (await User.findOne({
+              $or: [{ username }, { email: username }],
+            }));
 
-          // Check if the user exists and the password matches
+          console.log("🚀 ~ file: route.js:24 ~ authorize ~ user:", user);
+
           if (user && user.password === password) {
-            // Any object returned will be saved in `user` property of the JWT
-            return {
-              id: user._id.toString(),
-              name: user.username,
-              email: user.email,
-              role: user.role,
+            const loggedIn = user.toObject();
+            const loggedInUser = {
+              id: loggedIn._id.toString(),
+              name: loggedIn.fullName,
+              email: loggedIn.email,
+              role: loggedIn.role,
             };
+            return loggedInUser;
           } else {
-            // If the user is not found or password doesn't match, return null
             return null;
           }
         } catch (error) {
-          // Handle any errors that might occur during the database query
           console.error("Error during authentication:", error);
           throw new Error("Failed to authenticate. Please try again later.");
         }
@@ -53,6 +49,18 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    async jwt({ token, trigger, session, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+      }
+
+      if (trigger === "update" && session?.email) {
+        token.email = session.email;
+        token.name = session.name;
+      }
+      return token;
+    },
     async signIn({ user, account, profile, email, credentials }) {
       if (user.id) {
         return true;
@@ -60,11 +68,15 @@ export const authOptions = {
         return false;
       }
     },
-    async session({ session }) {
+    async session({ session, user, token }) {
+      if (user) {
+        session.id = user.id;
+        session.role = user.role;
+      }
       return session;
     },
     async authorized({ req, token }) {
-      if (token) return true; // If there is a token, the user is authenticated
+      if (token) return true;
     },
   },
   pages: {

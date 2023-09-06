@@ -1,9 +1,9 @@
 "use client";
-import AttendanceForm from "@components/AttendanceForm";
-import AttendanceLogTable from "@components/AttendanceLogTable";
-import { getAttendanceData } from "@utils/api/attendance";
-import { getEmployeesData } from "@utils/api/employee";
 import { useEffect, useState } from "react";
+import AttendanceForm from "../../../components/AttendanceForm";
+import AttendanceLogTable from "../../../components/AttendanceLogTable";
+import { getAttendanceData } from "../../../utils/api/attendance";
+import { getEmployeesData } from "../../../utils/api/employee";
 
 const AttendanceFormPage = () => {
   const [employeesData, setEmployeesData] = useState({ data: [] });

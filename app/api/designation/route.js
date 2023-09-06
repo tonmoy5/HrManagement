@@ -1,5 +1,5 @@
-import Designation from "@models/designation";
-import { connectToDB } from "@utils/database";
+import Designation from "../../../models/designation";
+import { connectToDB } from "../../../utils/database";
 
 export const GET = async (req) => {
   try {

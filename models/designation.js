@@ -12,6 +12,6 @@ const DesignationSchema = new Schema({
 });
 
 const Designation =
-  models.Designation || model("Designation", DesignationSchema);
+  models?.Designation || model("Designation", DesignationSchema);
 
 export default Designation;

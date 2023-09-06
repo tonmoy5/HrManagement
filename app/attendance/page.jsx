@@ -1,10 +1,10 @@
 "use client";
-import AttendanceLogTable from "@components/AttendanceLogTable";
-import TableLoader from "@components/TableLoader";
-import EmployeeSelect from "@components/molecules/EmployeeSelect";
-import LabeledInput from "@components/molecules/LabeledInput";
-import { getAttendanceData } from "@utils/api/attendance";
 import { useEffect, useState } from "react";
+import AttendanceLogTable from "../../components/AttendanceLogTable";
+import TableLoader from "../../components/TableLoader";
+import EmployeeSelect from "../../components/molecules/EmployeeSelect";
+import LabeledInput from "../../components/molecules/LabeledInput";
+import { getAttendanceData } from "../../utils/api/attendance";
 
 const AttendanceLog = () => {
   const today = new Date();

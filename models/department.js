@@ -11,6 +11,6 @@ const DepartmentSchema = new Schema({
   },
 });
 
-const Department = models.Department || model("Department", DepartmentSchema);
+const Department = models?.Department || model("Department", DepartmentSchema);
 
 export default Department;

@@ -1,8 +1,8 @@
 // api/leave/route.js
 
-import Employee from "@models/employee";
-import Leave from "@models/leave";
-import { connectToDB } from "@utils/database";
+import Employee from "../../../models/employee";
+import Leave from "../../../models/leave";
+import { connectToDB } from "../../../utils/database";
 
 export const GET = async (req) => {
   try {

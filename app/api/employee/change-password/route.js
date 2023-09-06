@@ -1,10 +1,10 @@
 // /pages/api/profile/change-password.js
 
-import User from "@models/user";
-import { hashPassword, verifyPassword } from "@utils/auth";
-import { connectToDB } from "@utils/database";
 import { getSession } from "next-auth/react";
 import { NextResponse } from "next/server";
+import User from "../../../../models/user";
+import { hashPassword, verifyPassword } from "../../../../utils/auth";
+import { connectToDB } from "../../../../utils/database";
 
 export const PUT = async (request) => {
   const session = await getSession({ req: request.nextRequest });

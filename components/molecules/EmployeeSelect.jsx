@@ -1,6 +1,6 @@
-import CustomSelect from "@components/atoms/CustomSelect";
-import { getEmployeesData } from "@utils/api/employee";
 import { useEffect, useState } from "react";
+import CustomSelect from "../../components/atoms/CustomSelect";
+import { getEmployeesData } from "../../utils/api/employee";
 
 const EmployeeSelect = ({ onChange }) => {
   const [employees, setEmployees] = useState([]);

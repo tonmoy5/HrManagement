@@ -1,16 +1,17 @@
 "use client";
-import ProfileInfo from "@components/profile/ProfileInfo";
-import useProfileInfo from "@hooks/useProfileInfo";
+import AdminProfile from "../../components/organisms/admin/AdminProfile";
+import EmployeeProfile from "../../components/organisms/EmployeeProfile";
+import { useUserContext } from "../../context/UserContext";
 
 const ProfilePage = () => {
-  const { userInfo, isLoading } = useProfileInfo();
+  const { user } = useUserContext();
 
   return (
     <div>
-      {isLoading ? (
-        <div className="flex gap-3 items-center">Loading...</div>
+      {user?.role === "admin" ? (
+        <AdminProfile info={user} />
       ) : (
-        <ProfileInfo info={userInfo} />
+        <EmployeeProfile info={user} />
       )}
     </div>
   );

@@ -1,16 +1,15 @@
-import Department from "@models/department";
-import Designation from "@models/designation";
-import Employee from "@models/employee";
-import User from "@models/user";
-import { connectToDB } from "@utils/database";
 import bcrypt from "bcrypt";
+import Department from "../../../models/department";
+import Designation from "../../../models/designation";
+import Employee from "../../../models/employee";
+import { connectToDB } from "../../../utils/database";
 
 export const GET = async (request) => {
   try {
     await connectToDB();
     await Designation.countDocuments();
     await Department.countDocuments();
-    const employees = await Employee.find({})
+    const employees = await Employee.find({ role: "employee" })
       .populate("designation")
       .populate("department");
 
@@ -38,6 +37,10 @@ export const POST = async (request) => {
   const {
     fullName,
     email,
+    username,
+    password,
+    image,
+    role,
     phone,
     gender,
     address,
@@ -45,26 +48,29 @@ export const POST = async (request) => {
     department,
     joiningDate,
     status,
+    inactiveDate,
+    terminatedDate,
     salary,
     allowances,
     overtimeRate,
+    taxInformation,
     bankAccount,
-    // for create new user
-    image,
-    username,
-    password,
-    website,
-    github,
-    twitter,
-    linkedin,
+    links,
+    payrollHistory,
   } = await request.json();
 
   try {
     await connectToDB();
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newEmployee = new Employee({
       fullName,
       email,
+      username,
+      password: hashedPassword,
+      image,
+      role,
       phone,
       gender,
       address,
@@ -72,32 +78,24 @@ export const POST = async (request) => {
       department,
       joiningDate,
       status,
+      inactiveDate,
+      terminatedDate,
       salary,
       allowances,
       overtimeRate,
+      taxInformation,
       bankAccount,
+      links,
+      payrollHistory,
     });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({
-      email,
-      image,
-      username,
-      password: hashedPassword,
-      website,
-      github,
-      twitter,
-      linkedin,
-    });
     await newEmployee.save();
-    await newUser.save();
 
     return new Response(
       JSON.stringify({
         success: true,
         message: "Employee added successfully",
-        data: { ...newEmployee, ...newUser },
+        data: { ...newEmployee },
       }),
       { status: 201 }
     );

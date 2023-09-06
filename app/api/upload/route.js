@@ -1,7 +1,8 @@
-import User from "@models/user";
 import { writeFile } from "fs/promises";
 import { NextResponse } from "next/server";
 import { join } from "path";
+import Employee from "../../../models/employee";
+import User from "../../../models/user";
 
 export async function POST(request) {
   const data = await request.formData();
@@ -19,10 +20,12 @@ export async function POST(request) {
   const filePath = join(file.name);
   await writeFile(path, buffer);
 
-  const user = await User.findOne({ email: email });
+  let user =
+    (await User.findOne({ email: email })) ||
+    (await Employee.findOne({ email: email }));
 
   if (user) {
-    user.image = filePath;
+    user.image = `/uploads/${filePath}`;
     user.save();
   }
 

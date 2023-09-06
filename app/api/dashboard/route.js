@@ -1,8 +1,8 @@
-import Attendance from "@models/attendance";
-import Employee from "@models/employee";
-import Leave from "@models/leave";
-import { connectToDB } from "@utils/database";
 import { NextResponse } from "next/server";
+import Attendance from "../../../models/attendance";
+import Employee from "../../../models/employee";
+import Leave from "../../../models/leave";
+import { connectToDB } from "../../../utils/database";
 
 export const GET = async (request) => {
   await connectToDB();

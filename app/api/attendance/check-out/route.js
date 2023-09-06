@@ -1,5 +1,5 @@
-import Attendance from "@models/attendance";
-import { connectToDB } from "@utils/database";
+import Attendance from "../../../../models/attendance";
+import { connectToDB } from "../../../../utils/database";
 
 export const PUT = async (req) => {
   const { employeeId, date, checkOutTime } = await req.json();

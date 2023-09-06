@@ -1,32 +1,36 @@
 // /api/employee/check-exist
 
-import User from "@models/user";
-import { connectToDB } from "@utils/database";
+import Employee from "../../../../models/employee";
+import User from "../../../../models/user";
+import { connectToDB } from "../../../../utils/database";
 
 export const GET = async (request) => {
   const username = request.nextUrl.searchParams?.get("username");
   const email = request.nextUrl.searchParams?.get("email");
   try {
     await connectToDB();
-    let user = await User.findOne({ username });
+    let user =
+      (await User.findOne({ username: username })) ||
+      (await Employee.findOne({ username: username }));
     if (user) {
       return new Response(
         JSON.stringify({
           success: true,
           message: "User username already exists",
-          data: user,
+          data: { username: true, email: false },
         }),
         { status: 200 }
       );
     }
 
-    user = await User.findOne({ email });
+    user =
+      (await User.findOne({ email })) || (await Employee.findOne({ email }));
     if (user) {
       return new Response(
         JSON.stringify({
           success: true,
           message: "User email already exists",
-          data: user,
+          data: { username: false, email: true },
         }),
         { status: 200 }
       );

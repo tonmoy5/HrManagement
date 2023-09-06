@@ -1,5 +1,5 @@
-import Department from "@models/department";
-import { connectToDB } from "@utils/database";
+import Department from "../../../models/department";
+import { connectToDB } from "../../../utils/database";
 
 export const GET = async (req) => {
   try {

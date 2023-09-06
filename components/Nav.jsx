@@ -1,7 +1,5 @@
 "use client";
-import useOutsideClick from "@hooks/useOutsideClick";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,12 +8,14 @@ import { AiOutlineSetting } from "react-icons/ai";
 import { CiLogout } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
 import { FiLoader } from "react-icons/fi";
+import { useUserContext } from "../context/UserContext";
+import useOutsideClick from "../hooks/useOutsideClick";
 
 const Nav = ({ isOpen, setIsOpen }) => {
   const [isSettingOpen, setIsSettingOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { data: session } = useSession();
-
+  const { user } = useUserContext();
+  console.log("🚀 ~ file: Nav.jsx:18 ~ Nav ~ user:", user);
   const router = useRouter();
 
   const profileMenuRef = useRef(null);
@@ -28,7 +28,6 @@ const Nav = ({ isOpen, setIsOpen }) => {
     try {
       setIsLoading(true);
       await fetch("/api/logout", { method: "POST" });
-
       // Redirect to the login page
       router.push("/auth/login");
     } catch (error) {
@@ -39,7 +38,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
   };
 
   const userAvatar =
-    session?.user?.image ||
+    user?.image ||
     "https://cdn3.iconfinder.com/data/icons/avatars-collection/256/22-512.png";
 
   return (
@@ -68,7 +67,13 @@ const Nav = ({ isOpen, setIsOpen }) => {
           </button>
         )}
         <div className="md:hidden flex gap-2">
-          <Image src={"/logo.svg"} width={30} height={30} alt="HR_Logo" />
+          <Image
+            src={"/logo.svg"}
+            width={30}
+            height={30}
+            alt="HR_Logo"
+            className="w-[30px] h-[30px] object-cover"
+          />
           <h1 className="md:text-xl text-base font-bold">HR Management</h1>
         </div>
       </div>
@@ -79,7 +84,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
           src={userAvatar}
           width={40}
           height={40}
-          className="rounded-full cursor-pointer"
+          className="rounded-full cursor-pointer w-[40px] h-[40px] object-cover"
           onClick={() => setIsSettingOpen((prev) => !prev)}
           alt="user-profile"
         />
@@ -97,14 +102,14 @@ const Nav = ({ isOpen, setIsOpen }) => {
                   src={userAvatar}
                   width={45}
                   height={45}
-                  className="rounded-md cursor-pointer"
+                  className="rounded-md cursor-pointer  w-[45px] h-[45px] object-cover"
                   alt="user_image"
                 />
                 <div>
                   <h3 className="font-bold text-sm capitalize">
-                    {session?.user?.name}
+                    {user?.fullName}
                   </h3>
-                  <p className="text_color text-sm">{session?.user?.email}</p>
+                  <p className="text_color text-sm">{user?.email}</p>
                 </div>
               </div>
               <ul className="">

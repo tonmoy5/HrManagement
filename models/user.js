@@ -1,15 +1,19 @@
 import { Schema, model, models } from "mongoose";
 
 const UserSchema = new Schema({
-  username: {
+  fullName: {
     type: String,
-    required: [true, "Username is required."],
-    unique: [true, "Username already exists"],
+    required: [true, "Employee Full Name is required."],
   },
   email: {
     type: String,
     required: [true, "Email is required."],
     unique: [true, "Email already exists"],
+  },
+  username: {
+    type: String,
+    required: [true, "Username is required."],
+    unique: [true, "Username already exists"],
   },
   password: {
     type: String,
@@ -18,22 +22,10 @@ const UserSchema = new Schema({
   image: {
     type: String,
   },
-  website: {
-    type: String,
-  },
-  github: {
-    type: String,
-  },
-  twitter: {
-    type: String,
-  },
-  linkedin: {
-    type: String,
-  },
   role: {
     type: String,
     enum: ["admin", "employee"],
-    default: "employee",
+    default: "admin",
   },
 });
 

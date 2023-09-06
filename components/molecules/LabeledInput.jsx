@@ -1,6 +1,6 @@
-import InputField from "@components/atoms/InputField";
-import InputLabel from "@components/atoms/InputLabel";
-import SelectInput from "@components/atoms/SelectField";
+import InputField from "../../components/atoms/InputField";
+import InputLabel from "../../components/atoms/InputLabel";
+import SelectInput from "../../components/atoms/SelectField";
 
 const LabeledInput = ({
   label,

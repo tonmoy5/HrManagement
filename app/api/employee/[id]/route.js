@@ -1,8 +1,7 @@
-import Department from "@models/department";
-import Designation from "@models/designation";
-import Employee from "@models/employee";
-import User from "@models/user";
-import { connectToDB } from "@utils/database";
+import Department from "../../../../models/department";
+import Designation from "../../../../models/designation";
+import Employee from "../../../../models/employee";
+import { connectToDB } from "../../../../utils/database";
 
 export const GET = async (req, { params }) => {
   try {
@@ -34,10 +33,13 @@ export const GET = async (req, { params }) => {
   }
 };
 
-export const PUT = async (req, { params }) => {
+export const PUT = async (request, { params }) => {
   const {
     fullName,
     email,
+    username,
+    image,
+    role,
     phone,
     gender,
     address,
@@ -45,23 +47,20 @@ export const PUT = async (req, { params }) => {
     department,
     joiningDate,
     status,
+    inactiveDate,
+    terminatedDate,
     salary,
     allowances,
     overtimeRate,
+    taxInformation,
     bankAccount,
-    // for create new user
-    image,
-    username,
-    website,
-    github,
-    twitter,
-    linkedin,
-  } = await req.json();
+    links,
+    payrollHistory,
+  } = await request.json();
 
   try {
+    // Find the existing employee document by ID
     await connectToDB();
-
-    // Find the existing Employee document by ID
     const existingEmployee = await Employee.findById(params.id);
     if (!existingEmployee) {
       return new Response(
@@ -76,46 +75,41 @@ export const PUT = async (req, { params }) => {
     // Update the fields with the new values
     existingEmployee.fullName = fullName;
     existingEmployee.email = email;
+    existingEmployee.username = username;
+    existingEmployee.image = image;
+    existingEmployee.role = role;
     existingEmployee.phone = phone;
     existingEmployee.gender = gender;
     existingEmployee.address = address;
-
     existingEmployee.designation = designation;
     existingEmployee.department = department;
     existingEmployee.joiningDate = joiningDate;
     existingEmployee.status = status;
-
+    existingEmployee.inactiveDate = inactiveDate;
+    existingEmployee.terminatedDate = terminatedDate;
     existingEmployee.salary = salary;
     existingEmployee.allowances = allowances;
     existingEmployee.overtimeRate = overtimeRate;
     existingEmployee.taxInformation = taxInformation;
-
     existingEmployee.bankAccount = bankAccount;
+    existingEmployee.links = links;
+    existingEmployee.payrollHistory = payrollHistory;
 
-    // Save the updated document
-    const updatedEmployee = await existingEmployee.save();
-
-    const existingUser = await User.findOne({ email: existingEmployee.email });
-
-    existingUser.image = image;
-    existingUser.username = username;
-    existingUser.website = website;
-    existingUser.github = github;
-    existingUser.twitter = twitter;
-    existingUser.linkedin = linkedin;
-
-    const updatedUser = await existingUser.save();
+    // Save the updated employee document
+    const updatedEmployee = await existingEmployee.save({
+      validateBeforeSave: false,
+    });
 
     return new Response(
       JSON.stringify({
         success: true,
         message: "Employee updated successfully",
-        data: { ...updatedEmployee, ...updatedUser },
+        data: updatedEmployee,
       }),
       { status: 200 }
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return new Response(
       JSON.stringify({
         success: false,

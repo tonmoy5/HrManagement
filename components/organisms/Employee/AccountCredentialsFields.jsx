@@ -1,7 +1,7 @@
-import AddButton from "@components/atoms/AddButton";
-import Button from "@components/atoms/Button";
-import LabeledInput from "@components/molecules/LabeledInput";
 import React, { useState } from "react";
+import Button from "../../../components/atoms/Button";
+import LabeledInput from "../../../components/molecules/LabeledInput";
+import AddButton from "../../atoms/AddButton";
 
 const AccountCredentialsFields = React.memo(({ formData, setFormData }) => {
   const [showPassword, setShowPassword] = useState(false);

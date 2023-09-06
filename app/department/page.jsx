@@ -1,13 +1,13 @@
 "use client";
-import Alert from "@components/Alert";
-import Modal from "@components/Modal";
-import Table from "@components/Table";
-import TableLoader from "@components/TableLoader";
-import AddButton from "@components/atoms/AddButton";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { GoPencil } from "react-icons/go";
 import { HiOutlineTrash } from "react-icons/hi";
+import Alert from "../../components/Alert";
+import Modal from "../../components/Modal";
+import Table from "../../components/Table";
+import TableLoader from "../../components/TableLoader";
+import AddButton from "../../components/atoms/AddButton";
 
 const Department = () => {
   const headers = ["Name", "Description"];
@@ -17,7 +17,7 @@ const Department = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
 
-  const [alert, setAlert] = useState({ active: false, message: "" });
+  const [toast, setToast] = useState({ active: false, message: "" });
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -47,9 +47,10 @@ const Department = () => {
       setData((prevData) => [...prevData, updatedData.data]);
     }
     handleCloseModal();
-    setAlert({
+    setToast({
       active: true,
       message: index !== -1 ? "Update success" : "Add success",
+      className: "bg-green-600 text-white",
     });
   };
 
@@ -80,7 +81,7 @@ const Department = () => {
     setIsDeleteModalOpen(false);
     setSelectedRow(null);
     setData((prev) => prev.filter((r) => r._id !== row._id));
-    setAlert({ active: true, message: "Delete Success!" });
+    setToast({ active: true, message: "Delete Success!" });
   };
 
   const handleDelete = (row) => {

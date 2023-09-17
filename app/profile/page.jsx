@@ -1,5 +1,5 @@
 "use client";
-import AdminProfile from "../../components/organisms/admin/AdminProfile";
+import AdminProfile from "../../components/organisms/Admin/AdminProfile";
 import EmployeeProfile from "../../components/organisms/EmployeeProfile";
 import { useUserContext } from "../../context/UserContext";
 

@@ -9,14 +9,7 @@ import TabButton from "../../../components/atoms/TabButton";
 import { useUserContext } from "../../../context/UserContext";
 import { updateUserInfo } from "../../../utils/api/admin";
 import AdminPersonalField from "./AdminPersonalForm";
-
-const INITIAL_DATA = {
-  fullName: "",
-  email: "",
-  username: "",
-  password: "",
-  image: "",
-};
+import ResetPasswordForm from "./ResetPasswordForm";
 
 const AdminSetting = () => {
   const [activeTab, setActiveTab] = useState("personal");
@@ -71,6 +64,8 @@ const AdminSetting = () => {
 
       case "credentials":
         return <></>;
+      case "reset":
+        return <ResetPasswordForm />;
 
       default:
         return null;
@@ -83,15 +78,18 @@ const AdminSetting = () => {
       label: "Personal Info",
       value: "personal",
       icon: CiUser,
-      role: ["admin"],
     },
-
     {
       id: 2,
       label: "Account Credentials",
       value: "credentials",
       icon: CiLock,
-      role: ["admin", "employee"],
+    },
+    {
+      id: 3,
+      label: "Reset Password",
+      value: "reset",
+      icon: CiLock,
     },
   ];
 

@@ -116,7 +116,11 @@ const EmployeeForm = ({ editMode, userData, title }) => {
     switch (activeTab) {
       case "personal":
         return (
-          <PersonalInfoFields formData={formData} setFormData={setFormData} />
+          <PersonalInfoFields
+            formData={formData}
+            setFormData={setFormData}
+            userData={userData}
+          />
         );
       case "employment":
         return (

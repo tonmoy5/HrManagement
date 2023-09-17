@@ -12,3 +12,20 @@ export const updateUserInfo = async (formData) => {
   }
   return res.json();
 };
+
+export async function resetPassword(employeeId, newPassword) {
+  const res = await fetch("/api/employee/reset-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ employeeId, newPassword }),
+  });
+
+  if (!res.ok) {
+    // Handle error, throw an exception, or return an appropriate response
+    throw new Error("Failed to reset password");
+  }
+
+  return res.json();
+}

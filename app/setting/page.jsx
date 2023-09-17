@@ -11,7 +11,7 @@ const SettingPage = () => {
     user?.role === "admin" ? (
       <AdminSetting />
     ) : (
-      <EmployeeForm editMode={true} userData={user} />
+      <EmployeeForm editMode={true} userData={user} title={"Add Employee"} />
     )
   ) : (
     <p>Loading</p>

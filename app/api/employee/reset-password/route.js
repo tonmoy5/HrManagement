@@ -3,13 +3,12 @@
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { getSession } from "../../../../auth/cookies";
-import User from "../../../../models/user";
+import Employee from "../../../../models/user";
 import { connectToDB } from "../../../../utils/database";
 
 export async function PUT(request) {
   try {
     await connectToDB();
-
     // Get the user's session information
     const session = await getSession(request);
 
@@ -22,7 +21,7 @@ export async function PUT(request) {
     }
 
     // Find the user by session ID
-    const user = await User.findById(session.user._id);
+    const user = await Employee.findById(session.user._id);
 
     if (!user || user.role !== "admin") {
       return NextResponse.json(
@@ -38,7 +37,7 @@ export async function PUT(request) {
     const { email, newPassword } = await request.json();
 
     // Find the employee by email
-    const employeeUser = await User.findOne({ email });
+    const employeeUser = await Employee.findOne({ email });
 
     if (!employeeUser) {
       return NextResponse.json(
@@ -51,7 +50,7 @@ export async function PUT(request) {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Update the employee's password in the database
-    await User.findByIdAndUpdate(employeeUser._id, {
+    await Employee.findByIdAndUpdate(employeeUser._id, {
       password: hashedPassword,
     });
 

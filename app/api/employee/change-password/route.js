@@ -2,7 +2,7 @@
 
 import { getSession } from "next-auth/react";
 import { NextResponse } from "next/server";
-import User from "../../../../models/user";
+import Employee from "../../../../models/employee";
 import { hashPassword, verifyPassword } from "../../../../utils/auth";
 import { connectToDB } from "../../../../utils/database";
 
@@ -25,7 +25,7 @@ export const PUT = async (request) => {
     }
 
     await connectToDB();
-    const user = await User.findById(session.user.id);
+    const user = await Employee.findById(session.user.id);
 
     if (!user) {
       return NextResponse.json(

@@ -7,14 +7,17 @@ import LabeledInput from "../../../components/molecules/LabeledInput";
 import { checkExistsEmployee } from "../../../utils/api/employee";
 import { uploadFileToServer } from "../../../utils/api/general";
 
-const PersonalInfoFields = React.memo(({ formData, setFormData }) => {
+const PersonalInfoFields = React.memo(({ formData, setFormData, userData }) => {
   const [uploading, setUploading] = useState(false);
   const { data: session } = useSession();
   const [exist, setExist] = useState(false);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(async () => {
-      if (session?.user.email !== formData.email) {
+      if (
+        session?.user.email !== formData.email &&
+        userData.email !== formData.email
+      ) {
         const resData = await checkExistsEmployee({ email: formData.email });
         setExist(resData.success);
       } else {

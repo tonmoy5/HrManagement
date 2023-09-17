@@ -41,11 +41,15 @@ const EmployeeForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const designationResponse = await fetch("/api/designation");
+        const designationResponse = await fetch("/api/designation", {
+          cache: "no-store",
+        });
         const designationData = await designationResponse.json();
         setDesignation(designationData.data);
 
-        const departmentResponse = await fetch("/api/department");
+        const departmentResponse = await fetch("/api/department", {
+          cache: "no-store",
+        });
         const departmentData = await departmentResponse.json();
         setDepartment(departmentData.data);
       } catch (error) {

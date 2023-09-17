@@ -8,7 +8,7 @@ export async function getEmployeesData() {
 }
 
 export async function getEmployeeById(employeeId) {
-  const res = await fetch(`/api/employee/${employeeId}`);
+  const res = await fetch(`/api/employee/${employeeId}`, { cache: "no-store" });
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
@@ -49,7 +49,8 @@ export async function updateEmployeeData({ employeeId, formData }) {
 export async function checkExistsEmployee({ email, username }) {
   const queryParams = new URLSearchParams({ email, username });
   const res = await fetch(
-    `/api/employee/check-exist?${queryParams.toString()}`
+    `/api/employee/check-exist?${queryParams.toString()}`,
+    { cache: "no-store" }
   );
   if (!res.ok) {
     throw new Error("Failed to fetch data");

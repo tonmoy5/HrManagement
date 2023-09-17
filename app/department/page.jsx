@@ -58,7 +58,7 @@ const Department = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/department");
+        const response = await fetch("/api/department", { cache: "no-store" });
         const json = await response.json();
         setData(json.data);
       } catch (error) {
@@ -167,6 +167,7 @@ const DeleteModal = ({ row, isModalOpen, handleCloseModal, onSuccess }) => {
     try {
       const response = await fetch(`/api/department?id=${row._id}`, {
         method: "DELETE",
+        cache: "no-store",
       });
 
       if (!response.ok) {

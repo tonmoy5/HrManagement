@@ -38,7 +38,8 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
   const checkLeave = async (employeeId, date) => {
     try {
       const response = await fetch(
-        `/api/employee/check-leave?employeeId=${employeeId}&date=${date}`
+        `/api/employee/check-leave?employeeId=${employeeId}&date=${date}`,
+        { cache: "no-store" }
       );
       const responseData = await response.json();
 

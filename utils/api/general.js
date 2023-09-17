@@ -1,5 +1,5 @@
 export async function getDepartmentsData() {
-  const res = await fetch("/api/department");
+  const res = await fetch("/api/department", { cache: "no-store" });
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
@@ -8,7 +8,7 @@ export async function getDepartmentsData() {
 }
 
 export async function getDesignationsData() {
-  const res = await fetch("/api/designation");
+  const res = await fetch("/api/designation", { cache: "no-store" });
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");

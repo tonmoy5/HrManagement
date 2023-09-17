@@ -2,14 +2,13 @@
 import { AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import { CiLock, CiUser } from "react-icons/ci";
+import { CiUser } from "react-icons/ci";
 import Alert from "../../../components/Alert";
 import AddButton from "../../../components/atoms/AddButton";
 import TabButton from "../../../components/atoms/TabButton";
 import { useUserContext } from "../../../context/UserContext";
 import { updateUserInfo } from "../../../utils/api/admin";
 import AdminPersonalField from "./AdminPersonalForm";
-import ResetPasswordForm from "./ResetPasswordForm";
 
 const AdminSetting = () => {
   const [activeTab, setActiveTab] = useState("personal");
@@ -44,7 +43,7 @@ const AdminSetting = () => {
       console.log("Form data submitted successfully!");
     } catch (error) {
       console.error("Error submitting form data:", error);
-      // Display an error message or perform error handling
+
       setToast({
         active: true,
         message: "Something went wrong!",
@@ -62,10 +61,10 @@ const AdminSetting = () => {
           <AdminPersonalField formData={formData} setFormData={setFormData} />
         );
 
-      case "credentials":
-        return <></>;
-      case "reset":
-        return <ResetPasswordForm />;
+      // case "credentials":
+      //   return <></>;
+      // case "reset":
+      //   return <ResetPasswordForm />;
 
       default:
         return null;
@@ -79,18 +78,18 @@ const AdminSetting = () => {
       value: "personal",
       icon: CiUser,
     },
-    {
-      id: 2,
-      label: "Account Credentials",
-      value: "credentials",
-      icon: CiLock,
-    },
-    {
-      id: 3,
-      label: "Reset Password",
-      value: "reset",
-      icon: CiLock,
-    },
+    // {
+    //   id: 2,
+    //   label: "Account Credentials",
+    //   value: "credentials",
+    //   icon: CiLock,
+    // },
+    // {
+    //   id: 3,
+    //   label: "Reset Password",
+    //   value: "reset",
+    //   icon: CiLock,
+    // },
   ];
 
   return (

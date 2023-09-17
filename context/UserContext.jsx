@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`/api/me`); // Replace with your API endpoint
+        const response = await fetch(`/api/me`, { cache: "no-store" }); // Replace with your API endpoint
         if (response.ok) {
           const data = await response.json();
           setUser(data.data); // Assuming user data is in data.data

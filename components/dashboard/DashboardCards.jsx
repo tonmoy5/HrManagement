@@ -6,7 +6,7 @@ const DashboardCards = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/dashboard")
+    fetch("/api/dashboard",  {cache:'no-store'})
       .then((res) => res.json())
       .then((data) => setInfos(data))
       .finally(() => {

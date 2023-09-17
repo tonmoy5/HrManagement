@@ -23,7 +23,8 @@ const AttendanceGraph = () => {
 
     try {
       const response = await fetch(
-        `/api/attendance?startDate=${startDate}&endDate=${endDate}`
+        `/api/attendance?startDate=${startDate}&endDate=${endDate}`,
+        { cache: "no-store" }
       );
       const data = await response.json();
 

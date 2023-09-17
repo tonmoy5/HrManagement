@@ -20,7 +20,7 @@ const LeaveForm = ({ initialData, onSubmit, handleCloseModal }) => {
 
   const fetchEmployeeData = async () => {
     try {
-      const response = await fetch("/api/employee");
+      const response = await fetch("/api/employee", { cache: "no-store" });
       const json = await response.json();
       setEmployeeData(json.data);
     } catch (error) {

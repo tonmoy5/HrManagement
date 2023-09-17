@@ -119,7 +119,7 @@ const EmployeeForm = ({ editMode, userData, title }) => {
           <PersonalInfoFields
             formData={formData}
             setFormData={setFormData}
-            userData={userData}
+            userData={userData || {}}
           />
         );
       case "employment":

@@ -20,7 +20,7 @@ const Employees = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/employee");
+        const response = await fetch("/api/employee", { cache: "no-store" });
         const json = await response.json();
         setData(json.data);
       } catch (error) {
@@ -108,7 +108,9 @@ const EmployeeDetails = ({ employeeId }) => {
   useEffect(() => {
     const fetchEmployeeData = async () => {
       try {
-        const response = await fetch(`/api/employee/${employeeId}`);
+        const response = await fetch(`/api/employee/${employeeId}`, {
+          cache: "no-store",
+        });
         const json = await response.json();
         setEmployeeData(json.data);
       } catch (error) {

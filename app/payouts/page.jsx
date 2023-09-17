@@ -24,7 +24,8 @@ const Payroll = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `/api/payroll/new?month=${selectedMonth.toISOString()}`
+        `/api/payroll/new?month=${selectedMonth.toISOString()}`,
+        { cache: "no-store" }
       );
       const json = await response.json();
       console.log(

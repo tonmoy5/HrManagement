@@ -57,7 +57,7 @@ const Designation = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/designation");
+        const response = await fetch("/api/designation", { cache: "no-store" });
         const json = await response.json();
         setData(json.data);
       } catch (error) {

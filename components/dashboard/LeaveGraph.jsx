@@ -22,7 +22,8 @@ const LeavesGraph = () => {
 
     try {
       const response = await fetch(
-        `/api/leave?startDate=${startDate}&endDate=${endDate}`
+        `/api/leave?startDate=${startDate}&endDate=${endDate}`,
+        { cache: "no-store" }
       );
       const data = await response.json();
       // Format the data for the leave table

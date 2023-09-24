@@ -7,7 +7,7 @@ import Alert from "../../components/Alert";
 const WelcomeAlert = () => {
   const [toast, setToast] = useState({
     active: false,
-    message: "Welcome back admin!",
+    message: "Welcome back!",
     className: "bg_green_gradient text-white",
   });
   useEffect(() => {

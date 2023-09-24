@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import Employee from "../../../../models/employee";
 import User from "../../../../models/user";
 import { connectToDB } from "../../../../utils/database";
+const bcrypt = require("bcrypt");
 
 export const authOptions = {
   session: {
@@ -16,7 +17,6 @@ export const authOptions = {
       credentials: {},
       async authorize(credentials, req) {
         const { username, password } = credentials;
-        console.log("🚀 ~ file: route.js:20 ~ authorize ~ username:", username);
 
         try {
           await connectToDB();
@@ -28,7 +28,11 @@ export const authOptions = {
               $or: [{ username }, { email: username }],
             }));
 
-          if (user) {
+          if (
+            user &&
+            (user.password === password ||
+              bcrypt.compare(user.password, password))
+          ) {
             const loggedIn = user.toObject();
             const loggedInUser = {
               id: loggedIn._id.toString(),

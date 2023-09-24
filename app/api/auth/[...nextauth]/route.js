@@ -1,11 +1,11 @@
 // /api/auth/[...nextauth]/route.js
 
+import bcrypt from "bcrypt";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import Employee from "../../../../models/employee";
 import User from "../../../../models/user";
 import { connectToDB } from "../../../../utils/database";
-const bcrypt = require("bcrypt");
 
 export const authOptions = {
   session: {
@@ -32,7 +32,7 @@ export const authOptions = {
           if (
             user &&
             (user.password === password ||
-              bcrypt.compare(user.password, password))
+              bcrypt.compare(password, user.password))
           ) {
             const loggedIn = user.toObject();
             const loggedInUser = {

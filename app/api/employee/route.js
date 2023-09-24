@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import Department from "../../../models/department";
 import Designation from "../../../models/designation";
 import Employee from "../../../models/employee";

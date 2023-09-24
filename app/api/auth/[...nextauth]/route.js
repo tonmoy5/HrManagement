@@ -17,6 +17,7 @@ export const authOptions = {
       credentials: {},
       async authorize(credentials, req) {
         const { username, password } = credentials;
+        console.log("🚀 ~ file: route.js:20 ~ authorize ~ username:", username);
 
         try {
           await connectToDB();

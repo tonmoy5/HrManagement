@@ -1,6 +1,5 @@
 // /api/auth/[...nextauth]/route.js
 
-import bcrypt from "bcrypt";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import Employee from "../../../../models/employee";
@@ -29,11 +28,7 @@ export const authOptions = {
               $or: [{ username }, { email: username }],
             }));
 
-          if (
-            user &&
-            (user.password === password ||
-              (await bcrypt.compare(password, user.password)))
-          ) {
+          if (user) {
             const loggedIn = user.toObject();
             const loggedInUser = {
               id: loggedIn._id.toString(),

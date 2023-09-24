@@ -32,7 +32,7 @@ export const authOptions = {
           if (
             user &&
             (user.password === password ||
-              bcrypt.compare(password, user.password))
+              (await bcrypt.compare(password, user.password)))
           ) {
             const loggedIn = user.toObject();
             const loggedInUser = {

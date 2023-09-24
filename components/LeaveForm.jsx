@@ -49,8 +49,8 @@ const LeaveForm = ({ initialData, onSubmit, handleCloseModal }) => {
       employeeId,
       startDate,
       endDate,
-      reason: reason, // The "reason" state should be used for the "reason" field
-      halfDay, // Add the "halfDay" state to the leaveData object
+      reason: reason,
+      halfDay,
     };
 
     try {

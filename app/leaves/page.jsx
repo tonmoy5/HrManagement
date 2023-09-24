@@ -11,6 +11,7 @@ import Modal from "../../components/Modal";
 import Table from "../../components/Table";
 import AddButton from "../../components/atoms/AddButton";
 import EmployeeSelect from "../../components/molecules/EmployeeSelect";
+import { useUserContext } from "../../context/UserContext";
 import { getLeaveData } from "../../utils/api/leave";
 const LeaveManagement = () => {
   const headers = [
@@ -24,6 +25,8 @@ const LeaveManagement = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState(null);
+
+  const { user } = useUserContext();
 
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [selectedEmployee, setSelectedEmployee] = useState(new Date());
@@ -216,7 +219,7 @@ const LeaveManagement = () => {
               ),
             };
           })}
-          actionButtons={actionButtons}
+          actionButtons={user?.role === "employee" ? null : actionButtons}
         />
       ) : (
         <p>No leave data available.</p>

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import AttendanceForm from "../../../components/AttendanceForm";
 import AttendanceLogTable from "../../../components/AttendanceLogTable";
+import { useUserContext } from "../../../context/UserContext";
 import { getAttendanceData } from "../../../utils/api/attendance";
 import { getEmployeesData } from "../../../utils/api/employee";
 
@@ -9,27 +10,32 @@ const AttendanceFormPage = () => {
   const [employeesData, setEmployeesData] = useState({ data: [] });
   const [attendanceData, setAttendanceData] = useState([]);
 
-  useEffect(() => {
-    // Fetch employees data
-    getEmployeesData()
-      .then((data) => setEmployeesData(data))
-      .catch((error) => {
-        console.error("Error fetching employees data:", error);
-        // Handle the error as needed
-      });
+  const { user } = useUserContext();
 
-    // Fetch attendance data with specific parameters
+  useEffect(() => {
     const attendanceParams = {
       limit: 10,
     };
+
+    if (!user) return;
+    if (user?.role === "employee") {
+      setEmployeesData({ data: [user] });
+      attendanceParams.employeeId = user._id;
+    } else {
+      getEmployeesData()
+        .then((data) => setEmployeesData(data))
+        .catch((error) => {
+          console.error("Error fetching employees data:", error);
+          // Handle the error as needed
+        });
+    }
 
     getAttendanceData(attendanceParams)
       .then((data) => setAttendanceData(data.data))
       .catch((error) => {
         console.error("Error fetching attendance data:", error);
-        // Handle the error as needed
       });
-  }, []);
+  }, [user]);
 
   return (
     <section className="p-5 bg-white rounded shadow">

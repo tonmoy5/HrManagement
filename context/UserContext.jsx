@@ -10,15 +10,19 @@ export const useUserContext = () => {
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  console.log("🚀 ~ file: UserContext.jsx:13 ~ UserProvider ~ user:", user);
+  const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
 
   useEffect(() => {
+    console.log("session?.user changed:", session?.user);
+
     const fetchUserData = async () => {
+      setLoading(true);
       try {
         const response = await fetch(`/api/me`, { cache: "no-store" }); // Replace with your API endpoint
         if (response.ok) {
           const data = await response.json();
+
           setUser(data.data); // Assuming user data is in data.data
         } else {
           console.error("Error fetching user data:", response.statusText);
@@ -27,15 +31,13 @@ export const UserProvider = ({ children }) => {
       } catch (error) {
         console.error("Error fetching user data:", error);
         setUser(null); // Set user to null in case of an error
+      } finally {
+        setLoading(false);
       }
     };
 
     session?.user && fetchUserData();
   }, [session?.user]);
-  console.log(
-    "🚀 ~ file: UserContext.jsx:34 ~ UserProvider ~ session:",
-    session
-  );
 
   // Function to update the user's data
   const updateUser = async (data) => {
@@ -43,7 +45,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, updateUser }}>
+    <UserContext.Provider value={{ user, updateUser, loading }}>
       {children}
     </UserContext.Provider>
   );

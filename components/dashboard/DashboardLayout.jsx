@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useUserContext } from "../../context/UserContext";
 import { useNavigationEvent } from "../../hooks/useNavigationEvent";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import Nav from "../Nav";
@@ -15,6 +16,7 @@ const DashboardLayout = ({ children }) => {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { user, loading } = useUserContext();
 
   useOutsideClick(sidebarRef, () => {
     setIsOpen(false);
@@ -50,7 +52,8 @@ const DashboardLayout = ({ children }) => {
       <Preloader />
       {pathname === "/auth/login"
         ? children
-        : status === "authenticated" && (
+        : status === "authenticated" &&
+          user && (
             <div className="flex">
               <div ref={sidebarRef} className={`relative md:w-[260px] w-0`}>
                 <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />

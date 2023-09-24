@@ -3,12 +3,14 @@
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useUserContext } from "../context/UserContext";
 import Alert from "./Alert";
 
 const AttendanceForm = ({ employees, setAttendanceData }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [isOnLeave, setIsOnLeave] = useState(false); // State to track if the employee is on leave
+  const [isOnLeave, setIsOnLeave] = useState(false);
+  const { user } = useUserContext();
 
   const [toast, setToast] = useState({
     active: false,
@@ -22,7 +24,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
   ).toISOString();
 
   const [formData, setFormData] = useState({
-    employeeId: "",
+    employeeId: user?.role ==="employee" ?  user._id : "",
     punchType: "",
     date: currentDateISOString.slice(0, 10),
     time: "",
@@ -175,12 +177,15 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
           <select
             id="employeeId"
             name="employeeId"
-            value={formData.employeeId}
+            value={user?.role === "employee" ? user._id : formData.employeeId}
             onChange={handleChange}
             required
+            disabled={user.role === "employee"}
             className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
           >
-            <option value="">Select Employee</option>
+            {user.role === "employee" ? null : (
+              <option value="">Select Employee</option>
+            )}
             {employees.map((employee) => (
               <option key={employee._id} value={employee?._id}>
                 {employee?.fullName} ({employee?.designation?.title})

@@ -19,36 +19,57 @@ import { useState } from "react";
 import { useUserContext } from "../context/UserContext";
 // Array of links
 const links = [
-  { name: "Dashboard", icon: AiOutlineDashboard, href: "/" },
+  {
+    name: "Dashboard",
+    icon: AiOutlineDashboard,
+    href: "/",
+    role: ["admin", "employee"],
+  },
   {
     name: "Employee",
     icon: LiaUsersSolid,
     submenu: [
-      { name: "Designation", href: "/employee/designation" },
-      { name: "Add Employee", href: "/employee/add" },
-      { name: "Manage Employee", href: "/employee" },
+      { name: "Designation", href: "/employee/designation", role: ["admin"] },
+      { name: "Add Employee", href: "/employee/add", role: ["admin"] },
+      { name: "Manage Employee", href: "/employee", role: ["admin"] },
     ],
   },
   {
     name: "Department",
     icon: HiOutlineOfficeBuilding,
     href: "/department",
+    role: ["admin"],
   },
   {
     name: "Attendance",
     icon: LiaUserEditSolid,
     submenu: [
-      { name: "Attendance Form", href: "/attendance/form" },
-      { name: "Attendance Log", href: "/attendance" },
+      { name: "Attendance Form", href: "/attendance/form", role: ["employee"] },
+      {
+        name: "Attendance Log",
+        href: "/attendance",
+        role: ["admin", "employee"],
+      },
     ],
   },
-  { name: "Payouts", icon: AiOutlineDollar, href: "/payouts" },
-  { name: "Leaves", icon: TbUserShare, href: "/leaves" },
-  { name: "Profile", icon: AiOutlineUser, href: "/profile" },
-  { name: "Setting", icon: AiOutlineSetting, href: "/setting" },
+  { name: "Payouts", icon: AiOutlineDollar, href: "/payouts", role: ["admin"] },
+  { name: "Leaves", icon: TbUserShare, href: "/leaves", role: ["employee"] },
+  {
+    name: "Profile",
+    icon: AiOutlineUser,
+    href: "/profile",
+    role: ["admin", "employee"],
+  },
+  {
+    name: "Setting",
+    icon: AiOutlineSetting,
+    href: "/setting",
+    role: ["admin", "employee"],
+  },
   // { name: "Calendar", icon: AiOutlineCalendar, href: "/calendar" },
   // Add more links here
 ];
+
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const pathname = usePathname();
   const toggleSidebar = () => {
@@ -72,6 +93,24 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     findActiveSubmenu === -1 ? 0 : findActiveSubmenu
   );
   const { user } = useUserContext();
+
+  const filteredLinks = user
+    ? links.filter((link) => {
+        if (link.submenu) {
+          link.submenu = link.submenu.filter((submenuItem) =>
+            submenuItem.role.includes(user.role)
+          );
+          if (link.submenu.length > 0) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return link.role.includes(user.role);
+        }
+      })
+    : links;
+
   return (
     <div
       className={`${
@@ -115,7 +154,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         </div>
         <nav className="p-4">
           <ul>
-            {links.map((link, index) => (
+            {filteredLinks.map((link, index) => (
               <li key={index} className="">
                 {link.href ? (
                   <Link

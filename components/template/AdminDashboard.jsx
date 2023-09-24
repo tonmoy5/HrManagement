@@ -1,8 +1,6 @@
 "use client";
 import AttendanceGraph from "../../components/dashboard/AttendanceGraph";
 import DashboardCards from "../../components/dashboard/DashboardCards";
-import DepartmentList from "../../components/dashboard/DepartmentList";
-import DesignationList from "../../components/dashboard/DesignationList";
 import LeavesGraph from "../../components/dashboard/LeaveGraph";
 
 const AdminDashboard = () => {
@@ -23,7 +21,7 @@ const AdminDashboard = () => {
           <LeavesGraph />
         </div>
       </div>
-      <div className="md:flex gap-5 mt-5 w-full">
+      {/* <div className="md:flex gap-5 mt-5 w-full">
         <div className="md:w-[47%] w-full p-5 bg-white shadow-md rounded-md">
           <h3 className="blue_gradient mb-2 font-semibold">Departments</h3>
           <DepartmentList />
@@ -32,7 +30,7 @@ const AdminDashboard = () => {
           <h3 className="green_gradient mb-2 font-semibold">Designations</h3>
           <DesignationList />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

@@ -4,9 +4,44 @@ import DashboardCards from "../../components/dashboard/DashboardCards";
 import LeavesGraph from "../../components/dashboard/LeaveGraph";
 
 const AdminDashboard = () => {
+  const [infos, setInfos] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/dashboard", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => setInfos(data))
+      .finally(() => {
+        setIsLoading(false);
+      });
+    return () => {};
+  }, []);
+
+  const cardData = [
+    {
+      title: "Total Employees",
+      count: infos.totalEmployees,
+      style: "bg_green_gradient text-white",
+    },
+    {
+      title: "Today's Presents",
+      count: infos.presentEmployees,
+      style: "bg_blue_gradient text-white",
+    },
+    {
+      title: "Today's Absents",
+      count: infos.totalEmployees - infos.presentEmployees,
+      style: "bg_orange_gradient text-white",
+    },
+    {
+      title: "Today's Leave",
+      count: infos.todayLeaves,
+      style: "bg_red_gradient text-white",
+    },
+  ];
   return (
     <>
-      <DashboardCards />
+      <DashboardCards cardData={cardData} isLoading={isLoading} />
       <div className="md:flex md:flex-wrap gap-5 mt-5 w-full">
         <div className="md:w-[47%] bg-white p-5 shadow-md rounded-md w-[98%]">
           <h3 className="text-lg mb-5 green_gradient font-semibold">

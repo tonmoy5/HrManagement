@@ -11,7 +11,7 @@ import {
 
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { LiaUserEditSolid, LiaUsersSolid } from "react-icons/lia";
-import { MdArrowForwardIos } from "react-icons/md";
+import { MdArrowForwardIos, MdOutlineTask } from "react-icons/md";
 import { TbUserShare } from "react-icons/tb";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -44,7 +44,11 @@ const links = [
     name: "Attendance",
     icon: LiaUserEditSolid,
     submenu: [
-      { name: "Attendance Form", href: "/attendance/form", role: ["employee"] },
+      {
+        name: "Attendance Form",
+        href: "/attendance/form",
+        role: ["admin", "employee"],
+      },
       {
         name: "Attendance Log",
         href: "/attendance",
@@ -55,17 +59,25 @@ const links = [
   { name: "Payouts", icon: AiOutlineDollar, href: "/payouts", role: ["admin"] },
   { name: "Leaves", icon: TbUserShare, href: "/leaves", role: ["employee"] },
   {
+    name: "Tasks",
+    icon: MdOutlineTask,
+    href: "/tasks",
+    role: ["admin", "employee"],
+  },
+  {
     name: "Profile",
     icon: AiOutlineUser,
     href: "/profile",
     role: ["admin", "employee"],
   },
+
   {
     name: "Setting",
     icon: AiOutlineSetting,
     href: "/setting",
     role: ["admin", "employee"],
   },
+
   // { name: "Calendar", icon: AiOutlineCalendar, href: "/calendar" },
   // Add more links here
 ];

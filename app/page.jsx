@@ -3,6 +3,7 @@ import AttendanceGraph from "../components/dashboard/AttendanceGraph";
 import DashboardCards from "../components/dashboard/DashboardCards";
 import LeavesGraph from "../components/dashboard/LeaveGraph";
 import WelcomeAlert from "../components/dashboard/WelcomeAlert";
+import EmployeeDashboard from "../components/template/EmployeeDashboard";
 import { useUserContext } from "../context/UserContext";
 
 // export const metadata = {
@@ -16,7 +17,7 @@ const Home = () => {
     <section className="w-full">
       <WelcomeAlert />
       {user.role === "employee" ? (
-        <div>Employee Dashboard</div>
+        <EmployeeDashboard />
       ) : (
         <>
           <DashboardCards />

@@ -11,9 +11,7 @@ export const GET = async (request) => {
     const endDate = request.nextUrl.searchParams?.get("endDate");
     const employeeId = request.nextUrl.searchParams?.get("employeeId");
     const limit = parseInt(request.nextUrl.searchParams?.get("limit")); // Allow limit to be provided
-    // No need for page parameter in this case
 
-    // Prepare the query object to filter by date range and employeeId
     const query = {};
     if (startDate && endDate) {
       query.date = {

@@ -12,10 +12,16 @@ const AttendanceSchema = new Schema(
       required: [true, "Date is required."],
     },
     checkInTime: {
-      type: Date, // Change the type to Date
+      type: Date,
     },
     checkOutTime: {
-      type: Date, // Change the type to Date
+      type: Date,
+    },
+    checkInSnapShoot: {
+      type: String,
+    },
+    checkOutSnapShoot: {
+      type: String,
     },
   },
   { timestamps: true }

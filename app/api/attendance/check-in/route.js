@@ -1,4 +1,5 @@
 import Attendance from "../../../../models/attendance";
+import Point from "../../../../models/point";
 import { connectToDB } from "../../../../utils/database";
 
 export const POST = async (req) => {
@@ -13,7 +14,6 @@ export const POST = async (req) => {
   try {
     await connectToDB();
 
-    // Find the existing attendance document by employeeId and date
     const existingAttendance = await Attendance.findOne({
       employee: employeeId,
       date,
@@ -34,6 +34,15 @@ export const POST = async (req) => {
       checkInTime,
     });
     await newAttendance.save();
+
+    const newPoint = new Point({
+      employee: employeeId,
+      points: 1,
+      source: "Daily Attendance!",
+    });
+
+    await newPoint.save();
+
     return new Response(
       JSON.stringify({
         success: true,

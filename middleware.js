@@ -1,12 +1,15 @@
 // import { prettyLogger } from "@/services/prettyLogger";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
+import { prettyLogger } from "./services/prettyLogger";
 const legacyPrefixes = ["/api/auth"];
 const adminPaths = ["/profile/admin", "/setting/admin"];
 
 export async function middleware(req) {
   const { pathname } = req.nextUrl;
-  // prettyLogger.info(`User agent: ${req.headers.get("user-agent")}`);
+  if (pathname.startsWith("/api")) {
+    prettyLogger.info(`pathname: ${pathname}`);
+  }
   // prettyLogger.info(`Request from: ${req.headers.get("referer")}`);
 
   if (legacyPrefixes.some((prefix) => pathname.startsWith(prefix))) {

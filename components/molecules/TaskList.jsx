@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa";
 import { useUserContext } from "../../context/UserContext";
 
@@ -45,13 +46,13 @@ const TaskList = ({ tasks, onDelete, onEdit, onComplete }) => {
                 <>
                   <button
                     onClick={() => onEdit(task)}
-                    className="text-green-500 hover:text-green-700"
+                    className="text-green-700 hover:text-green-700"
                   >
                     <FaEdit />
                   </button>
                   <button
                     onClick={() => onDelete(task._id)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-red-700 hover:text-red-700"
                   >
                     <FaTrash />
                   </button>
@@ -60,32 +61,37 @@ const TaskList = ({ tasks, onDelete, onEdit, onComplete }) => {
               {task.status === "pending" && (
                 <button
                   onClick={() => markTaskAsComplete(task._id)}
-                  className="text-green-500"
+                  className="text-green-700"
                 >
                   <FaCheckCircle />
                 </button>
               )}
             </div>
           </div>
-          <p className="text-gray-600">{task.description}</p>
-          <p className="text-gray-500 mt-2">
-            <span className="font-semibold">Employee:</span>{" "}
-            {task.employee.fullName}
-          </p>
-          <p className="text-gray-500">
-            <span className="font-semibold">Status:</span> {task.status}
-          </p>
-          <p className="text-gray-500">
-            <span className="font-semibold">Points:</span> {task.points}
-          </p>
-          <p className="text-gray-500">
-            <span className="font-semibold">Start Date:</span>{" "}
-            {new Date(task.startDate).toLocaleDateString()}
-          </p>
-          <p className="text-gray-500">
-            <span className="font-semibold">End Date:</span>{" "}
-            {new Date(task.endDate).toLocaleDateString()}
-          </p>
+          <p className="text-gray-600 mb-2">{task.description}</p>
+          {user.role === "admin" ? (
+            <p className="text-gray-700 text-sm">
+              <span className="font-semibold">Employee:</span>{" "}
+              {task.employee.fullName}
+            </p>
+          ) : null}
+
+          <div className="grid grid-cols-2 ">
+            <p className="text-gray-700 text-xs capitalize">
+              <span className="font-semibold ">Status:</span> {task.status}
+            </p>
+            <p className="text-gray-700 text-xs">
+              <span className="font-semibold ">Points:</span> {task.points}
+            </p>
+            <p className="text-gray-700 text-xs">
+              <span className="font-semibold ">Start From:</span>{" "}
+              {dayjs(task.startDate).format("ddd DD MMM, YYYY")}
+            </p>
+            <p className="text-gray-700 text-xs">
+              <span className="font-semibold ">Due Date:</span>{" "}
+              {dayjs(task.endDate).format("ddd DD MMM, YYYY")}
+            </p>
+          </div>
         </div>
       ))}
     </div>

@@ -8,9 +8,10 @@ const EmployeeDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/dashboard", { cache: "no-store" })
+    fetch("/api/dashboard/employee", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => setInfos(data))
+      .catch((err) => console.log(err))
       .finally(() => {
         setIsLoading(false);
       });
@@ -20,25 +21,29 @@ const EmployeeDashboard = () => {
   const cardData = [
     {
       title: "Total Points",
-      count: infos.totalEmployees,
+      count: infos.totalPoints,
       style: "bg_green_gradient text-white",
     },
     {
       title: "This Month Presents ",
-      count: infos.presentEmployees,
+      count: infos.totalPresentAttendance,
       style: "bg_blue_gradient text-white",
     },
-    {
-      title: "This Month Absents",
-      count: infos.totalEmployees - infos.presentEmployees,
-      style: "bg_orange_gradient text-white",
-    },
+    // {
+    //   title: "This Month Absents",
+    //   count: 0,
+    //   style: "bg_orange_gradient text-white",
+    // },
     {
       title: "This Month Leave",
-      count: infos.todayLeaves,
+      count: infos.totalLeaves,
       style: "bg_red_gradient text-white",
     },
   ];
+  console.log(
+    "🚀 ~ file: EmployeeDashboard.jsx:42 ~ EmployeeDashboard ~ cardData:",
+    cardData
+  );
   return (
     <>
       <DashboardCards cardData={cardData} isLoading={isLoading} />

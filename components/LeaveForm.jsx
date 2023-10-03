@@ -2,9 +2,14 @@
 // LeaveForm.js
 
 import { useEffect, useState } from "react";
+import { useUserContext } from "../context/UserContext";
 
 const LeaveForm = ({ initialData, onSubmit, handleCloseModal }) => {
-  const [employeeId, setEmployeeId] = useState("");
+  const { user } = useUserContext();
+
+  const [employeeId, setEmployeeId] = useState(
+    user.role === "employee" ? user._id : ""
+  );
   const [reason, setReason] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -93,9 +98,10 @@ const LeaveForm = ({ initialData, onSubmit, handleCloseModal }) => {
         </label>
         <select
           id="employeeId"
-          value={employeeId}
+          value={user.role === "employee" ? user._id : employeeId}
           onChange={(e) => setEmployeeId(e.target.value)}
           required
+          disabled={user.role === "employee"}
           className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
         >
           <option value="">Select an employee</option>

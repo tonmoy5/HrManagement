@@ -118,7 +118,7 @@ const TasksPageTemplate = () => {
   return (
     <div className="">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-bold mb-2 text-xl ml-2 blue_gradient w-max">
+        <h2 className="font-bold mb-1 text-xl ml-2 blue_gradient w-max">
           Task Manager
         </h2>
         {user.role === "admin" ? (

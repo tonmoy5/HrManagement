@@ -1,8 +1,6 @@
 "use client";
-import AttendanceGraph from "../components/dashboard/AttendanceGraph";
-import DashboardCards from "../components/dashboard/DashboardCards";
-import LeavesGraph from "../components/dashboard/LeaveGraph";
 import WelcomeAlert from "../components/dashboard/WelcomeAlert";
+import AdminDashboard from "../components/template/AdminDashboard";
 import EmployeeDashboard from "../components/template/EmployeeDashboard";
 import { useUserContext } from "../context/UserContext";
 
@@ -20,21 +18,7 @@ const Home = () => {
         <EmployeeDashboard />
       ) : (
         <>
-          <DashboardCards />
-          <div className="md:flex md:flex-wrap gap-5 mt-5 w-full">
-            <div className="md:w-[47%] bg-white p-5 shadow-md rounded-md w-[98%]">
-              <h3 className="text-lg mb-5 green_gradient font-semibold">
-                Attendance (last 30 days)
-              </h3>
-              <AttendanceGraph />
-            </div>
-            <div className="md:w-[47%] bg-white p-5 shadow-md rounded-md w-[98%] md:mt-0 mt-5">
-              <h3 className="text-lg mb-5 orange_gradient font-semibold">
-                Leaves (last 30 days)
-              </h3>
-              <LeavesGraph />
-            </div>
-          </div>
+          <AdminDashboard />
         </>
       )}
     </section>

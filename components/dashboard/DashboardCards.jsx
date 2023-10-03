@@ -1,9 +1,13 @@
 "use client";
 
 const DashboardCards = ({ cardData, isLoading }) => {
+  console.log(
+    "🚀 ~ file: DashboardCards.jsx:4 ~ DashboardCards ~ cardData:",
+    cardData
+  );
   return (
     <div className="flex md:flex-row flex-col gap-5 ">
-      {cardData.map((card, index) => (
+      {cardData?.map((card, index) => (
         <Card key={index} card={card} isLoading={isLoading} />
       ))}
     </div>

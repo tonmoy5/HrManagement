@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import AttendanceGraph from "../../components/dashboard/AttendanceGraph";
 import DashboardCards from "../../components/dashboard/DashboardCards";
 import LeavesGraph from "../../components/dashboard/LeaveGraph";

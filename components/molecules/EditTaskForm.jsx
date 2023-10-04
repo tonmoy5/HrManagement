@@ -2,10 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const EditTaskForm = ({ task, onUpdate, employees }) => {
-  console.log(
-    "🚀 ~ file: EditTaskForm.jsx:5 ~ EditTaskForm ~ employees:",
-    employees
-  );
   const [taskData, setTaskData] = useState({
     employee: task.employee._id,
     title: task.title,
@@ -15,6 +11,9 @@ const EditTaskForm = ({ task, onUpdate, employees }) => {
     startDate: task.startDate.slice(0, 10),
     endDate: task.endDate.slice(0, 10),
   });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setTaskData({
@@ -38,161 +37,165 @@ const EditTaskForm = ({ task, onUpdate, employees }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     try {
-      const response = await axios.put(`/api/tasks/${task._id}`, taskData);
+      const response = await axios.put(`/api/tasks?id=${task._id}`, taskData);
       const updatedTask = response.data.data;
       onUpdate(updatedTask);
+      setLoading(false);
     } catch (error) {
       console.error("Error updating task:", error);
+      setError("Error updating task. Please try again.");
+      setLoading(false);
     }
   };
 
   return (
-    <div className="bg-white shadow-md rounded-md p-4">
-      <h2 className="text-lg font-semibold mb-2">Edit Task</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4">
-          {/* Employee */}
-          <div className="mb-4">
-            <label
-              htmlFor="employee"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Employee
-            </label>
-            <select
-              id="employee"
-              name="employee"
-              value={taskData.employee}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-md p-2 w-full"
-              required
-            >
-              {employees.map((employee) => (
-                <option key={employee._id} value={employee._id}>
-                  {employee.fullName}
-                </option>
-              ))}
-            </select>
-          </div>
-          {/* Title */}
-          <div className="mb-4">
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={taskData.title}
-              onChange={handleChange}
-              className="border-gray-300 rounded-md p-2 w-full border"
-              required
-            />
-          </div>
-          {/* Description */}
-          <div className="mb-4 col-span-2">
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={taskData.description}
-              onChange={handleChange}
-              className="border-gray-300 rounded-md p-2 w-full border"
-              rows="4"
-            ></textarea>
-          </div>
-          {/* Points */}
-          <div className="mb-4">
-            <label
-              htmlFor="points"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Points
-            </label>
-            <input
-              type="number"
-              id="points"
-              name="points"
-              value={taskData.points}
-              onChange={handleChange}
-              className="border-gray-300 rounded-md p-2 w-full border"
-              required
-            />
-          </div>
-          {/* Status */}
-          <div className="mb-4">
-            <label
-              htmlFor="status"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Status
-            </label>
-            <select
-              id="status"
-              name="status"
-              value={taskData.status}
-              onChange={handleChange}
-              className="border-gray-300 rounded-md p-2 w-full border"
-            >
-              <option value="pending">Pending</option>
-              <option value="complete">Complete</option>
-              <option value="late">Late</option>
-            </select>
-          </div>
-          {/* Start Date */}
-          <div className="mb-4">
-            <label
-              htmlFor="startDate"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Start Date
-            </label>
-            <input
-              type="date"
-              id="startDate"
-              name="startDate"
-              value={taskData.startDate}
-              onChange={handleChange}
-              className="border-gray-300 rounded-md p-2 w-full border"
-              required
-            />
-          </div>
-          {/* End Date */}
-          <div className="mb-4">
-            <label
-              htmlFor="endDate"
-              className="block text-sm font-medium text-gray-700"
-            >
-              End Date
-            </label>
-            <input
-              type="date"
-              id="endDate"
-              name="endDate"
-              value={taskData.endDate}
-              onChange={handleChange}
-              className="border-gray-300 rounded-md p-2 w-full border"
-              required
-            />
-          </div>
+    <form onSubmit={handleSubmit}>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="mb-4">
+          <label
+            htmlFor="employee"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Employee
+          </label>
+          <select
+            id="employee"
+            name="employee"
+            value={taskData.employee}
+            onChange={handleChange}
+            className="border border-gray-300 rounded-md p-2 w-full"
+            required
+          >
+            {employees.map((employee) => (
+              <option key={employee._id} value={employee._id}>
+                {employee.fullName}
+              </option>
+            ))}
+          </select>
         </div>
-        <div className="flex justify-end">
-          <button type="submit" className="btn_blue">
-            Update Task
-          </button>
+        <div className="mb-4">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Title
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={taskData.title}
+            onChange={handleChange}
+            className="border-gray-300 rounded-md p-2 w-full border"
+            required
+          />
         </div>
-      </form>
-    </div>
+        {/* Description */}
+        <div className="mb-4 col-span-2">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={taskData.description}
+            onChange={handleChange}
+            className="border-gray-300 rounded-md p-2 w-full border"
+            rows="4"
+          ></textarea>
+        </div>
+        {/* Points */}
+        <div className="mb-4">
+          <label
+            htmlFor="points"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Points
+          </label>
+          <input
+            type="number"
+            id="points"
+            name="points"
+            value={taskData.points}
+            onChange={handleChange}
+            className="border-gray-300 rounded-md p-2 w-full border"
+            required
+          />
+        </div>
+        {/* Status */}
+        <div className="mb-4">
+          <label
+            htmlFor="status"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Status
+          </label>
+          <select
+            id="status"
+            name="status"
+            value={taskData.status}
+            onChange={handleChange}
+            className="border-gray-300 rounded-md p-2 w-full border"
+          >
+            <option value="pending">Pending</option>
+            <option value="complete">Complete</option>
+            <option value="late">Late</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="startDate"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Start Date
+          </label>
+          <input
+            type="date"
+            id="startDate"
+            name="startDate"
+            value={taskData.startDate}
+            onChange={handleChange}
+            className="border-gray-300 rounded-md p-2 w-full border"
+            required
+          />
+        </div>
+        {/* End Date */}
+        <div className="mb-4">
+          <label
+            htmlFor="endDate"
+            className="block text-sm font-medium text-gray-700"
+          >
+            End Date
+          </label>
+          <input
+            type="date"
+            id="endDate"
+            name="endDate"
+            value={taskData.endDate}
+            onChange={handleChange}
+            className="border-gray-300 rounded-md p-2 w-full border"
+            required
+          />
+        </div>
+      </div>
+      {error && <div className="text-red-600 mb-2">{error}</div>}
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          className="btn_blue disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={loading}
+        >
+          {loading ? "Updating..." : "Update Task"}
+        </button>
+      </div>
+    </form>
   );
 };
 

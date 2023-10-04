@@ -18,8 +18,7 @@ export const GET = async (request) => {
     const { email } = token;
 
     // Find the employee by email
-    const result = await Employee.findOne({ email });
-    const employee = result.toObject();
+    const employee = await Employee.findOne({ email });
 
     if (!employee) {
       return NextResponse.json(

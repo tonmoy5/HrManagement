@@ -107,7 +107,7 @@ export async function PUT(request) {
     return new Response(
       JSON.stringify({
         success: true,
-        data: updatedTask,
+        data: await updatedTask.populate("employee"),
       }),
       { status: 200 }
     );
@@ -126,6 +126,7 @@ export async function PUT(request) {
 export async function DELETE(request) {
   await connectToDB();
   const id = request.nextUrl.searchParams?.get("id");
+
   try {
     const deletedTask = await Task.findByIdAndRemove(id);
 

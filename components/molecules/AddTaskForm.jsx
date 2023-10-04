@@ -13,6 +13,7 @@ const AddTaskForm = ({ onAdd, employees }) => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,6 +26,7 @@ const AddTaskForm = ({ onAdd, employees }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     try {
       const response = await axios.post("/api/tasks", taskData);
@@ -32,6 +34,7 @@ const AddTaskForm = ({ onAdd, employees }) => {
       onAdd(newTask);
     } catch (error) {
       console.error("Error adding task:", error);
+      setError("Error adding task. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -195,10 +198,14 @@ const AddTaskForm = ({ onAdd, employees }) => {
           />
         </div>
       </div>
+      {error && <div className="text-red-600 mb-2">{error}</div>}
+
       <div className="flex justify-end">
         <button
           type="submit"
-          className={`btn_blue ${isLoading ? "cursor-wait" : ""}`}
+          className={`btn_blue ${
+            isLoading ? "cursor-wait" : ""
+          }  disabled:opacity-50`}
           disabled={isLoading}
         >
           {isLoading ? "Adding Task..." : "Add Task"}

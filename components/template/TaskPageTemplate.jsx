@@ -17,6 +17,8 @@ const TasksPageTemplate = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState(null);
 
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const { user } = useUserContext();
 
   const fetchEmployees = async () => {
@@ -61,14 +63,16 @@ const TasksPageTemplate = () => {
   const confirmDelete = async () => {
     if (taskToDelete) {
       try {
-        await axios.delete(`/api/tasks?id=${taskToDelete._id}`);
-        const updatedTasks = tasks.filter(
-          (task) => task._id !== taskToDelete._id
-        );
+        setIsDeleting(true);
+
+        await axios.delete(`/api/tasks?id=${taskToDelete}`);
+        const updatedTasks = tasks.filter((task) => task._id !== taskToDelete);
         setTasks(updatedTasks);
         closeDeleteModal();
       } catch (error) {
         console.error("Error deleting task:", error);
+      } finally {
+        setIsDeleting(false);
       }
     }
   };
@@ -165,6 +169,7 @@ const TasksPageTemplate = () => {
         isOpen={isDeleteModalOpen}
         onClose={closeDeleteModal}
         onDelete={confirmDelete}
+        isDeleting={isDeleting}
       />
     </div>
   );
@@ -172,13 +177,17 @@ const TasksPageTemplate = () => {
 
 export default TasksPageTemplate;
 
-const DeleteConfirmationModal = ({ isOpen, onClose, onDelete }) => {
+const DeleteConfirmationModal = ({ isOpen, onClose, onDelete, isDeleting }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Confirm Delete">
       <p>Are you sure you want to delete this task?</p>
       <div className="flex justify-end mt-4">
-        <button onClick={onDelete} className="btn_red">
-          Delete
+        <button
+          disabled={isDeleting}
+          onClick={onDelete}
+          className="btn_red disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isDeleting ? "Deleting..." : "Delete"}
         </button>
         <button onClick={onClose} className="btn_gray ml-2">
           Cancel

@@ -199,7 +199,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
         )}
       </AnimatePresence>
       <form onSubmit={handleSubmit}>
-        <div className="flex gap-10">
+        <div className="md:flex gap-10 md:space-y-0 space-y-4">
           <div className="space-y-4 md:w-1/2 w-full order-1">
             <div>
               <label htmlFor="employee" className="text-gray-700 font-medium">

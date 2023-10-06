@@ -38,7 +38,7 @@ const AttendanceFormPage = () => {
   }, [user]);
 
   return (
-    <section className="p-5 bg-white rounded shadow">
+    <section className="md:p-5 p-3 bg-white rounded shadow">
       <h1 className="font-bold text-lg mb-3 blue_gradient w-max">
         Attendance Form
       </h1>

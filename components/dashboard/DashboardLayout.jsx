@@ -60,7 +60,7 @@ const DashboardLayout = ({ children }) => {
               </div>
               <div className="flex flex-1 flex-col bg-[#fafafa] min-h-screen relative">
                 <Nav isOpen={isOpen} setIsOpen={setIsOpen} />
-                <div className="p-5 mt-[64px]">{children}</div>
+                <div className="md:p-5 p-2 mt-[64px]">{children}</div>
               </div>
             </div>
           )}

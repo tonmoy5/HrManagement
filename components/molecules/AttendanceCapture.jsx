@@ -16,6 +16,7 @@ const AttendanceCapture = ({ setWebcamRef, capturedImage }) => {
             audio={false}
             ref={(webcam) => setWebcamRef(webcam)}
             screenshotFormat="image/jpeg"
+            autoPlay
           />
         </div>
       )}

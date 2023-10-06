@@ -32,3 +32,6 @@ export const GET = async (request) => {
     { status: 200 }
   );
 };
+
+export const dynamic = "force-dynamic";
+// 'auto' | 'force-dynamic' | 'error' | 'force-static'

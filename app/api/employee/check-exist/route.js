@@ -53,3 +53,6 @@ export const GET = async (request) => {
     );
   }
 };
+
+export const dynamic = "force-dynamic";
+// 'auto' | 'force-dynamic' | 'error' | 'force-static'

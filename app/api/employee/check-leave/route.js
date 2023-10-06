@@ -7,9 +7,7 @@ export async function GET(request) {
   // Connect to the database
   await connectToDB();
 
-  // Extract the date and employeeId query parameters from the request URL
-  const url = new URL(request.url); // Corrected "req" to "request"
-  const searchParams = new URLSearchParams(url.search);
+  const searchParams = request.nextUrl.searchParams;
   const date = searchParams.get("date");
   const employeeId = searchParams.get("employeeId");
 
@@ -24,3 +22,6 @@ export async function GET(request) {
   // Return the result
   return NextResponse.json({ onLeave: !!leave }, { status: 200 });
 }
+
+export const dynamic = "force-dynamic";
+// 'auto' | 'force-dynamic' | 'error' | 'force-static'

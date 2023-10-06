@@ -4,12 +4,6 @@ import { connectToDB } from "../../../../utils/database";
 
 export const POST = async (req) => {
   const { employeeId, date, checkInTime } = await req.json();
-  console.log(
-    "🚀 ~ file: route.js:6 ~ POST ~ employeeId, date, checkInTime:",
-    employeeId,
-    date,
-    checkInTime
-  );
 
   try {
     await connectToDB();

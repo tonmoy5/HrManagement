@@ -1,4 +1,6 @@
-import { writeFile } from "fs/promises";
+// /api/upload
+
+import { unlink, writeFile } from "fs/promises";
 import { NextResponse } from "next/server";
 import { join } from "path";
 import Employee from "../../../models/employee";
@@ -7,6 +9,7 @@ import User from "../../../models/user";
 export async function POST(request) {
   const data = await request.formData();
   const file = data.get("file");
+
   const email = data.get("email");
 
   if (!file) {
@@ -30,4 +33,20 @@ export async function POST(request) {
   }
 
   return NextResponse.json({ success: true, url: `/uploads/${filePath}` });
+}
+
+export async function DELETE(request) {
+  const { fileName } = await request.json();
+  console.log("🚀 ~ file: route.js:41 ~ DELETE ~ fileName:", fileName);
+
+  if (!fileName) {
+    return NextResponse.json({ success: false }).status(500);
+  }
+  const path = join(`public`, fileName);
+  await unlink(path);
+
+  return NextResponse.json({
+    success: true,
+    message: `File removed successfully!`,
+  });
 }

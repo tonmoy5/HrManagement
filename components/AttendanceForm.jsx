@@ -1,8 +1,10 @@
 "use client";
 
+import dayjs from "dayjs";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import AttendanceCapture from "../components/molecules/AttendanceCapture";
 import { useUserContext } from "../context/UserContext";
 import Alert from "./Alert";
 
@@ -11,6 +13,9 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOnLeave, setIsOnLeave] = useState(false);
   const { user } = useUserContext();
+
+  const [webcamRef, setWebcamRef] = useState(null);
+  const [capturedImage, setCapturedImage] = useState(null);
 
   const [toast, setToast] = useState({
     active: false,
@@ -24,10 +29,12 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
   ).toISOString();
 
   const [formData, setFormData] = useState({
-    employeeId: user?.role ==="employee" ?  user._id : "",
+    employeeId: user?.role === "employee" ? user._id : "",
     punchType: "",
     date: currentDateISOString.slice(0, 10),
-    time: "",
+    time: dayjs(new Date()).format("hh:mm"),
+    checkInSnapShoot: null,
+    checkOutSnapShoot: null,
   });
 
   useEffect(() => {
@@ -69,15 +76,44 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let imageSrc;
+    let uploadedImage;
+
     setIsLoading(true);
+
     try {
       const { employeeId, punchType, date, time } = formData;
+
+      if (webcamRef) {
+        imageSrc = webcamRef.getScreenshot();
+        setCapturedImage(imageSrc);
+
+        const blob = await fetch(imageSrc).then((res) => res.blob());
+
+        const imgFormData = new FormData();
+        imgFormData.append("file", blob, "screenshot555.jpg");
+
+        const fileRes = await fetch("/api/upload", {
+          method: "POST",
+          body: imgFormData,
+        });
+
+        const fileData = await fileRes.json();
+        uploadedImage = fileData.url;
+
+        if (!fileRes.ok) {
+          return new Error("Upload snapshot failed");
+        }
+      }
       const data = { employeeId, date };
 
       if (punchType === "punchIn") {
         data.checkInTime = new Date(`${date}T${time}:00Z`);
+        data.checkInSnapShoot = imageSrc;
       } else if (punchType === "punchOut") {
         data.checkOutTime = new Date(`${date}T${time}:00Z`);
+        data.checkOutSnapShoot = imageSrc;
       }
 
       const response = await fetch(
@@ -90,6 +126,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
           body: JSON.stringify(data),
         }
       );
+
       const responseData = await response.json();
 
       if (!response.ok) {
@@ -122,7 +159,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
         employeeId: "",
         punchType: "",
         date: currentDateISOString.slice(0, 10),
-        time: "",
+        time: dayjs(new Date()).format("hh:mm"),
       });
       router.refresh();
     } catch (error) {
@@ -132,6 +169,12 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
         }:`,
         error
       );
+
+      await fetch("/api/upload", {
+        method: "DELETE",
+        body: JSON.stringify({ fileName: uploadedImage }),
+      });
+
       setToast({
         active: true,
         message: error.message,
@@ -139,23 +182,9 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
       });
     } finally {
       setIsLoading(false);
+      setCapturedImage(null);
     }
   };
-
-  useEffect(() => {
-    // Automatically select time based on punchType
-    if (formData.punchType === "punchIn") {
-      setFormData((prevData) => ({
-        ...prevData,
-        time: "10:00",
-      }));
-    } else if (formData.punchType === "punchOut") {
-      setFormData((prevData) => ({
-        ...prevData,
-        time: "18:00",
-      }));
-    }
-  }, [formData.punchType]);
 
   return (
     <div>
@@ -169,96 +198,110 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
           />
         )}
       </AnimatePresence>
-      <form onSubmit={handleSubmit} className="space-y-4 md:w-1/2 w-full">
-        <div>
-          <label htmlFor="employee" className="text-gray-700 font-medium">
-            Employee:
-          </label>
-          <select
-            id="employeeId"
-            name="employeeId"
-            value={user?.role === "employee" ? user._id : formData.employeeId}
-            onChange={handleChange}
-            required
-            disabled={user.role === "employee"}
-            className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
-          >
-            {user.role === "employee" ? null : (
-              <option value="">Select Employee</option>
-            )}
-            {employees.map((employee) => (
-              <option key={employee._id} value={employee?._id}>
-                {employee?.fullName} ({employee?.designation?.title})
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="text-gray-700 font-medium">Punch Type:</label>
-          <div className="flex space-x-4">
+      <form onSubmit={handleSubmit}>
+        <div className="flex gap-10">
+          <div className="space-y-4 md:w-1/2 w-full order-1">
             <div>
-              <input
-                type="radio"
-                id="punchIn"
-                name="punchType"
-                value="punchIn"
-                checked={formData.punchType === "punchIn"}
-                onChange={handleRadioChange}
-                required
-              />
-              <label htmlFor="punchIn" className="ml-2">
-                Punch In
+              <label htmlFor="employee" className="text-gray-700 font-medium">
+                Employee:
               </label>
+              <select
+                id="employeeId"
+                name="employeeId"
+                value={
+                  user?.role === "employee" ? user._id : formData.employeeId
+                }
+                onChange={handleChange}
+                required
+                disabled={user.role === "employee"}
+                className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
+              >
+                {user.role === "employee" ? null : (
+                  <option value="">Select Employee</option>
+                )}
+                {employees.map((employee) => (
+                  <option key={employee._id} value={employee?._id}>
+                    {employee?.fullName} ({employee?.designation?.title})
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
-              <input
-                type="radio"
-                id="punchOut"
-                name="punchType"
-                value="punchOut"
-                checked={formData.punchType === "punchOut"}
-                onChange={handleRadioChange}
-                required
-              />
-              <label htmlFor="punchOut" className="ml-2">
-                Punch Out
+              <label className="text-gray-700 font-medium">Punch Type:</label>
+              <div className="flex space-x-4">
+                <div>
+                  <input
+                    type="radio"
+                    id="punchIn"
+                    name="punchType"
+                    value="punchIn"
+                    checked={formData.punchType === "punchIn"}
+                    onChange={handleRadioChange}
+                    required
+                  />
+                  <label htmlFor="punchIn" className="ml-2">
+                    Punch In
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    id="punchOut"
+                    name="punchType"
+                    value="punchOut"
+                    checked={formData.punchType === "punchOut"}
+                    onChange={handleRadioChange}
+                    required
+                  />
+                  <label htmlFor="punchOut" className="ml-2">
+                    Punch Out
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="date" className="text-gray-700 font-medium">
+                Date:
               </label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                disabled
+                required
+                className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
+              />
+            </div>
+            <div>
+              <label htmlFor="time" className="text-gray-700 font-medium">
+                Time:
+              </label>
+              <input
+                type="time"
+                id="time"
+                name="time"
+                value={formData.time}
+                onChange={handleChange}
+                disabled
+                required
+                className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
+              />
             </div>
           </div>
-        </div>
-
-        <div>
-          <label htmlFor="date" className="text-gray-700 font-medium">
-            Date:
-          </label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-            className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
-          />
-        </div>
-        <div>
-          <label htmlFor="time" className="text-gray-700 font-medium">
-            Time:
-          </label>
-          <input
-            type="time"
-            id="time"
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-            required
-            className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
-          />
+          <div className="order-2 flex-1">
+            <AttendanceCapture
+              capturedImage={capturedImage}
+              setWebcamRef={setWebcamRef}
+            />
+          </div>
         </div>
         {isOnLeave && (
           <p className="text-red-500 py-2">This employee is on leave</p>
         )}
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-5">
           <button
             type="submit"
             className="btn_blue text-sm disabled:opacity-50 disabled:cursor-not-allowed"

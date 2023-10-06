@@ -6,9 +6,13 @@ const legacyPrefixes = ["/api/auth"];
 const adminPaths = ["/profile/admin", "/setting/admin"];
 
 export async function middleware(req) {
-  const { pathname } = req.nextUrl;
+  const { pathname, search } = req.nextUrl;
+
   if (pathname.startsWith("/api")) {
-    prettyLogger.info(`pathname: ${pathname}`);
+    const pathName = { method: req.method, path: pathname };
+    const queryString = { query: search };
+    prettyLogger.info(JSON.stringify(pathName));
+    search && prettyLogger.info(JSON.stringify(queryString));
   }
   // prettyLogger.info(`Request from: ${req.headers.get("referer")}`);
 

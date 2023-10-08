@@ -50,3 +50,12 @@ export const uploadFileToServer = async (files, email) => {
   if (!res.ok) throw new Error(await res.text());
   return res.json();
 };
+
+export const deleteFileFromServer = async (fileUrl) => {
+  const res = await fetch("/api/upload", {
+    method: "DELETE",
+    body: JSON.stringify({ fileUrl }),
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+};

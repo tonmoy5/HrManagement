@@ -100,6 +100,10 @@ const AttendanceGraph = () => {
   const createChart = () => {
     const ctx = document.getElementById(id).getContext("2d");
 
+    if (chartInstance) {
+      chartInstance.destroy();
+    }
+
     // Extract dates and attendance counts for the last 30 days
     const labels = attendanceData.map((item) => {
       const date = new Date(item.date);

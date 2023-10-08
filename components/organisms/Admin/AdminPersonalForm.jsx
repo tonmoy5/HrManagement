@@ -4,7 +4,10 @@ import React, { useEffect, useState } from "react";
 import LabeledInput from "../../../components/molecules/LabeledInput";
 import { useUserContext } from "../../../context/UserContext";
 import { checkExistsEmployee } from "../../../utils/api/employee";
-import { uploadFileToServer } from "../../../utils/api/general";
+import {
+  deleteFileFromServer,
+  uploadFileToServer,
+} from "../../../utils/api/general";
 
 const AdminPersonalForm = React.memo(({ formData, setFormData }) => {
   const [uploading, setUploading] = useState(false);
@@ -52,7 +55,7 @@ const AdminPersonalForm = React.memo(({ formData, setFormData }) => {
     setUploading(true);
     try {
       const resData = await uploadFileToServer(e.target.files, formData.email);
-
+      await deleteFileFromServer(formData.image);
       setFormData((p) => ({ ...p, image: `${resData.url}` }));
       updateUser({ image: `${resData.url}` });
     } catch (err) {

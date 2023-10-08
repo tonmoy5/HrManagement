@@ -172,7 +172,10 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
 
       await fetch("/api/upload", {
         method: "DELETE",
-        body: JSON.stringify({ fileName: uploadedImage }),
+        body: JSON.stringify({
+          fileUrl: uploadedImage,
+          uploadKey: process.env.UPLOAD_KEY,
+        }),
       });
 
       setToast({

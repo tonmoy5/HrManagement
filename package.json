@@ -15,6 +15,7 @@
     "chart.js": "^4.3.3",
     "dayjs": "^1.11.10",
     "framer-motion": "^10.12.21",
+    "googleapis": "^126.0.1",
     "mongodb": "^5.7.0",
     "mongoose": "^7.3.2",
     "next": "^13.5.4",

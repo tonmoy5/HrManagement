@@ -80,6 +80,10 @@ const LeavesGraph = () => {
   const createChart = () => {
     const ctx = document.getElementById(id).getContext("2d");
 
+    if (chartInstance) {
+      chartInstance.destroy();
+    }
+
     // Extract dates and leave counts for the last 30 days
     const labels = leaveData.map((item) => {
       const date = new Date(item.date);

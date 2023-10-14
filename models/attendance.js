@@ -23,6 +23,18 @@ const AttendanceSchema = new Schema(
     checkOutSnapShoot: {
       type: String,
     },
+    overtimeHour: {
+      type: Number,
+      default: 0,
+    },
+    overtimeRate: {
+      type: Number,
+      default: 500,
+    },
+    isLate: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

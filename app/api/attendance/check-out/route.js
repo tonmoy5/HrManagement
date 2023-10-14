@@ -2,7 +2,8 @@ import Attendance from "../../../../models/attendance";
 import { connectToDB } from "../../../../utils/database";
 
 export const PUT = async (req) => {
-  const { employeeId, date, checkOutTime } = await req.json();
+  const { employeeId, date, checkOutTime, checkOutSnapShoot } =
+    await req.json();
 
   try {
     await connectToDB();
@@ -10,7 +11,7 @@ export const PUT = async (req) => {
     // Find the existing attendance document by employeeId and date
     const existingAttendance = await Attendance.findOneAndUpdate(
       { employee: employeeId, date },
-      { checkOutTime },
+      { checkOutTime, checkOutSnapShoot },
       { new: true }
     );
 

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   AiOutlineDashboard,
   AiOutlineDollar,
+  AiOutlineSchedule,
   AiOutlineSetting,
   AiOutlineUser,
 } from "react-icons/ai";
@@ -57,11 +58,22 @@ const links = [
     ],
   },
   { name: "Payouts", icon: AiOutlineDollar, href: "/payouts", role: ["admin"] },
-  { name: "Leaves", icon: TbUserShare, href: "/leaves", role: ["employee"] },
+  {
+    name: "Leaves",
+    icon: TbUserShare,
+    href: "/leaves",
+    role: ["admin", "employee"],
+  },
   {
     name: "Tasks",
     icon: MdOutlineTask,
     href: "/tasks",
+    role: ["admin", "employee"],
+  },
+  {
+    name: "Schedule",
+    icon: AiOutlineSchedule,
+    href: "/schedule",
     role: ["admin", "employee"],
   },
   {

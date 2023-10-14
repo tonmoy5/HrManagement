@@ -15,7 +15,7 @@ const Nav = ({ isOpen, setIsOpen }) => {
   const [isSettingOpen, setIsSettingOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useUserContext();
-  console.log("🚀 ~ file: Nav.jsx:18 ~ Nav ~ user:", user);
+  // console.log("🚀 ~ file: Nav.jsx:18 ~ Nav ~ user:", user);
   const router = useRouter();
 
   const profileMenuRef = useRef(null);

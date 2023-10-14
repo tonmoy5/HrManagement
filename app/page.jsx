@@ -1,5 +1,6 @@
 "use client";
-import WelcomeAlert from "../components/dashboard/WelcomeAlert";
+
+import WelcomeAlert from "../components/molecules/dashboard/WelcomeAlert";
 import AdminDashboard from "../components/template/AdminDashboard";
 import EmployeeDashboard from "../components/template/EmployeeDashboard";
 import { useUserContext } from "../context/UserContext";

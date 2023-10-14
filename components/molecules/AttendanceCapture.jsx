@@ -1,7 +1,12 @@
 // AttendanceCapture.js
 import Webcam from "react-webcam";
 
-const AttendanceCapture = ({ setWebcamRef, capturedImage }) => {
+const AttendanceCapture = ({
+  setWebcamRef,
+  capturedImage,
+  showCamera,
+  handleOpenCamera,
+}) => {
   return (
     <div>
       {capturedImage ? (
@@ -12,12 +17,22 @@ const AttendanceCapture = ({ setWebcamRef, capturedImage }) => {
       ) : (
         <div>
           <h2 className="font-bold mb-2">Live Camera:</h2>
-          <Webcam
-            audio={false}
-            ref={(webcam) => setWebcamRef(webcam)}
-            screenshotFormat="image/jpeg"
-            autoPlay
-          />
+          {showCamera ? (
+            <Webcam
+              audio={false}
+              ref={(webcam) => setWebcamRef(webcam)}
+              screenshotFormat="image/jpeg"
+              autoPlay={true}
+              screenshotQuality={0.4}
+            />
+          ) : (
+            <button
+              className="btn_green text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleOpenCamera}
+            >
+              Open Camera
+            </button>
+          )}
         </div>
       )}
     </div>

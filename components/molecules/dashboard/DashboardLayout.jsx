@@ -3,12 +3,12 @@
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { useUserContext } from "../../context/UserContext";
-import { useNavigationEvent } from "../../hooks/useNavigationEvent";
-import useOutsideClick from "../../hooks/useOutsideClick";
-import Nav from "../Nav";
-import Preloader from "../PreLoader";
-import Sidebar from "../Sidebar";
+import { useUserContext } from "../../../context/UserContext";
+import { useNavigationEvent } from "../../../hooks/useNavigationEvent";
+import useOutsideClick from "../../../hooks/useOutsideClick";
+import Nav from "../../Nav";
+import Preloader from "../../PreLoader";
+import Sidebar from "../../Sidebar";
 
 const DashboardLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);

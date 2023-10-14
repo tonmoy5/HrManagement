@@ -54,5 +54,34 @@ export const GET = async (request) => {
   }
 };
 
+export const PUT = async (request) => {
+  try {
+    await connectToDB();
+
+    const id = request.nextUrl.searchParams?.get("id");
+    const update = await request.json();
+    const data = await Attendance.findByIdAndUpdate(id, update, { new: true });
+    console.log("🚀 ~ file: route.js:64 ~ PUT ~ data:", data);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Attendances updated successfully",
+        data,
+      }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: error.message,
+      }),
+      { status: 500 }
+    );
+  }
+};
+
 export const dynamic = "force-dynamic";
 // 'auto' | 'force-dynamic' | 'error' | 'force-static'

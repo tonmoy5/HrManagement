@@ -1,9 +1,12 @@
+import dayjs from "dayjs";
 import Attendance from "../../../../models/attendance";
+import Employee from "../../../../models/employee";
 import Point from "../../../../models/point";
+import Schedule from "../../../../models/schedule";
 import { connectToDB } from "../../../../utils/database";
 
 export const POST = async (req) => {
-  const { employeeId, date, checkInTime } = await req.json();
+  const { employeeId, date, checkInTime, checkInSnapShoot } = await req.json();
 
   try {
     await connectToDB();
@@ -22,10 +25,49 @@ export const POST = async (req) => {
         { status: 500 }
       );
     }
+
+    const employee = await Employee.findById(employeeId);
+
+    if (!employee) {
+      throw new Error("Employee not found");
+    }
+
+    let overtimeRate = employee.overtimeRate;
+    let isLate = false;
+
+    const schedule = await Schedule.findOne({
+      employee: employeeId,
+    });
+
+    if (
+      schedule &&
+      schedule.workHours &&
+      schedule.workHours.startTime &&
+      checkInTime
+    ) {
+      const scheduleStartTime = schedule.workHours.startTime;
+
+      const checkInTimeDate = dayjs(new Date(checkInTime)).format("HH:mm");
+
+      const sTime = new Date(`2000-01-01T${scheduleStartTime}:00Z`);
+      const cTime = new Date(`2000-01-01T${checkInTimeDate}:00`);
+
+      if (!isNaN(sTime) && !isNaN(cTime)) {
+        if (cTime > sTime) {
+          isLate = true;
+        }
+      } else {
+        console.log("Invalid date format");
+      }
+    }
+
     const newAttendance = new Attendance({
       employee: employeeId,
       date,
       checkInTime,
+      overtimeRate,
+      isLate,
+      checkInSnapShoot,
     });
     await newAttendance.save();
 

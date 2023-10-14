@@ -5,6 +5,7 @@ import Attendance from "../../../../models/attendance";
 import Employee from "../../../../models/employee";
 import Leave from "../../../../models/leave";
 import Point from "../../../../models/point";
+import Task from "../../../../models/task";
 import { connectToDB } from "../../../../utils/database";
 
 export const GET = async (request) => {
@@ -51,6 +52,7 @@ export const GET = async (request) => {
       endDate: {
         $lt: new Date(currentDate.getFullYear(), currentMonth, 1),
       },
+      status: "approved",
     });
 
     const totalLeaves = leaves.length;
@@ -70,12 +72,26 @@ export const GET = async (request) => {
 
     const totalPoints = points.length > 0 ? points[0].totalPoints : 0;
 
+    const totalDueTasks = await Task.find({
+      endDate: { $lte: currentDate },
+    }).countDocuments();
+
+    const attendances = await Attendance.find({ employee: employee._id }).limit(
+      5
+    );
+    const pointTransactions = await Point.find({
+      employee: employee._id,
+    }).limit(5);
+
     return NextResponse.json(
       {
         success: true,
         totalPresentAttendance,
         totalLeaves,
         totalPoints,
+        totalDueTasks,
+        attendances: attendances,
+        pointTransactions: pointTransactions,
       },
       { status: 200 }
     );

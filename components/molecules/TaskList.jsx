@@ -1,12 +1,20 @@
+import axios from "axios";
 import dayjs from "dayjs";
+import { useState } from "react";
 import { FaCheckCircle, FaEdit, FaTrash } from "react-icons/fa";
 import { useUserContext } from "../../context/UserContext";
 
 const TaskList = ({ tasks, onDelete, onEdit, onComplete }) => {
   const { user } = useUserContext();
+  const [isUpdating, setIsUpdating] = useState(null);
 
   const markTaskAsComplete = async (taskId) => {
+    console.log(
+      "🚀 ~ file: TaskList.jsx:11 ~ markTaskAsComplete ~ taskId:",
+      taskId
+    );
     try {
+      setIsUpdating(taskId);
       const response = await axios.put(`/api/tasks?id=${taskId}`, {
         status: "completed",
       });
@@ -14,6 +22,8 @@ const TaskList = ({ tasks, onDelete, onEdit, onComplete }) => {
       onComplete(taskId);
     } catch (error) {
       console.error("Error marking task as complete:", error);
+    } finally {
+      setIsUpdating(null);
     }
   };
 
@@ -37,8 +47,13 @@ const TaskList = ({ tasks, onDelete, onEdit, onComplete }) => {
           key={task._id}
           className={`rounded-lg shadow-md p-4 hover:shadow-lg ${getStatusColorClass(
             task.status
-          )}`}
+          )} relative overflow-hidden`}
         >
+          {isUpdating === task._id ? (
+            <div className="absolute top-0 left-0 w-full">
+              <div class="loader-line"></div>
+            </div>
+          ) : null}
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">{task.title}</h3>
             <div className="space-x-2">
@@ -94,6 +109,7 @@ const TaskList = ({ tasks, onDelete, onEdit, onComplete }) => {
           </div>
         </div>
       ))}
+      {tasks.length === 0 ? <div className="pl-3">No tasks found</div> : null}
     </div>
   );
 };

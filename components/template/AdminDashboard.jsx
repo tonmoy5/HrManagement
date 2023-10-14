@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import AttendanceGraph from "../../components/dashboard/AttendanceGraph";
-import DashboardCards from "../../components/dashboard/DashboardCards";
-import LeavesGraph from "../../components/dashboard/LeaveGraph";
+import AttendanceGraph from "../../components/molecules/dashboard/AttendanceGraph";
+import DashboardCards from "../../components/molecules/dashboard/DashboardCards";
+import LeavesGraph from "../../components/molecules/dashboard/LeaveGraph";
 
 const AdminDashboard = () => {
   const [infos, setInfos] = useState({});

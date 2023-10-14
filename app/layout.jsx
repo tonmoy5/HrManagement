@@ -1,6 +1,6 @@
 import Provider from "../components/Provider";
 import TopLoadingBar from "../components/TopLoadingBar";
-import DashboardLayout from "../components/dashboard/DashboardLayout";
+import DashboardLayout from "../components/molecules/dashboard/DashboardLayout";
 import { UserProvider } from "../context/UserContext";
 import "../styles/global.css";
 export const metadata = {

@@ -89,8 +89,8 @@ export async function PUT(request) {
       );
     }
 
-    if (dataFromBody.status === "complete") {
-      const pointsValue = dataFromBody.points;
+    if (dataFromBody.status === "completed") {
+      const pointsValue = taskToUpdate.points;
 
       const newPoint = new Point({
         employee: taskToUpdate.employee,

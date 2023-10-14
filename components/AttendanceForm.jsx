@@ -17,6 +17,12 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
   const [webcamRef, setWebcamRef] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
 
+  const [showCamera, setShowCamera] = useState(false);
+
+  const handleOpenCamera = () => {
+    setShowCamera(true);
+  };
+
   const [toast, setToast] = useState({
     active: false,
     message: "",
@@ -110,10 +116,10 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
 
       if (punchType === "punchIn") {
         data.checkInTime = new Date(`${date}T${time}:00Z`);
-        data.checkInSnapShoot = imageSrc;
+        data.checkInSnapShoot = uploadedImage;
       } else if (punchType === "punchOut") {
         data.checkOutTime = new Date(`${date}T${time}:00Z`);
-        data.checkOutSnapShoot = imageSrc;
+        data.checkOutSnapShoot = uploadedImage;
       }
 
       const response = await fetch(
@@ -161,7 +167,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
         date: currentDateISOString.slice(0, 10),
         time: dayjs(new Date()).format("hh:mm"),
       });
-      router.refresh();
+      // router.refresh();
     } catch (error) {
       console.error(
         `Error performing attendance ${
@@ -186,6 +192,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
     } finally {
       setIsLoading(false);
       setCapturedImage(null);
+      setShowCamera(false);
     }
   };
 
@@ -273,7 +280,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
-                disabled
+                disabled={user.role === "employee"}
                 required
                 className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
               />
@@ -288,7 +295,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
                 name="time"
                 value={formData.time}
                 onChange={handleChange}
-                disabled
+                disabled={user.role === "employee"}
                 required
                 className="block w-full border-gray-400 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm py-2 px-2 border"
               />
@@ -298,6 +305,8 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
             <AttendanceCapture
               capturedImage={capturedImage}
               setWebcamRef={setWebcamRef}
+              showCamera={showCamera}
+              handleOpenCamera={handleOpenCamera}
             />
           </div>
         </div>
@@ -308,7 +317,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
           <button
             type="submit"
             className="btn_blue text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isLoading || isOnLeave}
+            disabled={isLoading || isOnLeave || !showCamera}
           >
             {isLoading ? "Loading..." : "Submit"}
           </button>

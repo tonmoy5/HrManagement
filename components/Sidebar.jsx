@@ -10,6 +10,7 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 
+import { BsPeople } from "react-icons/bs";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { LiaUserEditSolid, LiaUsersSolid } from "react-icons/lia";
 import { MdArrowForwardIos, MdOutlineTask } from "react-icons/md";
@@ -88,6 +89,12 @@ const links = [
     icon: AiOutlineSetting,
     href: "/setting",
     role: ["admin", "employee"],
+  },
+  {
+    name: "User Management",
+    icon: BsPeople,
+    href: "/users",
+    role: ["admin"],
   },
 
   // { name: "Calendar", icon: AiOutlineCalendar, href: "/calendar" },

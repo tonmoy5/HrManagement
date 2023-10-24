@@ -1,218 +1,202 @@
-// // api/payroll/route.js
+import Employee from "../../../models/employee";
+import Payroll from "../../../models/payroll";
+import { connectToDB } from "../../../utils/database";
 
-// import Attendance from "../../../../models/attendance";
-// import Employee from "../../../../models/employee";
-// import Payroll from "../../../../models/payroll";
-// import { connectToDB } from "../utils/database";
+export const GET = async (request) => {
+  try {
+    await connectToDB();
 
-// export const GET = async (req) => {
-//   try {
-//     await connectToDB();
+    const selectedMonth = request.nextUrl.searchParams?.get("month");
 
-//     const currentMonth = new Date();
-//     currentMonth.setDate(1); // Set the date to the first day of the month
+    const currentDate = new Date(selectedMonth);
 
-//     // Find all employees
-//     const employees = await Employee.find({});
+    const firstDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
 
-//     // Array to store payroll data for all employees
-//     const payrollData = [];
+    const lastDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    );
 
-//     for (const employee of employees) {
-//       // Check if payroll entry for the current month exists for this employee
-//       const existingPayroll = await Payroll.findOne({
-//         employee: employee._id,
-//         payPeriodStart: { $gte: currentMonth },
-//       });
+    const employees = await Employee.find({});
 
-//       if (!existingPayroll || true) {
-//         // Calculate overtime hours for the employee for the current month
-//         const overtimeHours = await calculateOvertimeHours(
-//           employee,
-//           currentMonth
-//         );
+    const existingPayrollRecords = await Payroll.find({
+      month: {
+        $gte: firstDayOfMonth,
+        $lte: lastDayOfMonth,
+      },
+    });
 
-//         // Calculate payroll for the employee for the current month
-//         const payrollEntry = {
-//           employee: employee.toObject(),
-//           payPeriodStart: currentMonth,
-//           payPeriodEnd: new Date(),
-//           basicSalary: employee.salary,
-//           overtimeHours, // Assign the calculated overtime hours
-//           overtimeRate: employee.overtimeRate || 500, // Assuming overtime rate is already available in the employee model
-//           // Other payroll fields (grossSalary, deductions, allowances, netSalary)
-//           // Calculate grossSalary, deductions, allowances, netSalary
-//           grossSalary: await calculateGrossSalary(employee),
-//           deductions: await calculateDeductions(employee),
-//           allowances: calculateAllowances(employee),
-//           netSalary: await calculateNetSalary(employee),
-//           paymentDate: new Date(),
-//           status: "draft", // Set the default status to "draft"
-//         };
+    if (existingPayrollRecords.length > 0) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: "Payroll for the current month already generated",
+          data: existingPayrollRecords,
+        }),
+        { status: 200 }
+      );
+    }
 
-//         console.log(
-//           "🚀 ~ file: route.js:55 ~ GET ~ payrollEntry:",
-//           payrollEntry
-//         );
-//         payrollData.push(payrollEntry);
+    const payrollRecords = await Employee.aggregate([
+      {
+        $match: {
+          _id: {
+            $in: employees.map((employee) => employee._id),
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "attendances",
+          let: {
+            employeeId: "$_id",
+            firstDay: firstDayOfMonth,
+            lastDay: lastDayOfMonth,
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$employee", "$$employeeId"] },
+                    { $gte: ["$date", "$$firstDay"] },
+                    { $lte: ["$date", "$$lastDay"] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "attendanceRecords",
+        },
+      },
+      {
+        $addFields: {
+          overtimeHours: {
+            $sum: "$attendanceRecords.overtimeHour",
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          employee: "$_id",
+          salary: 1,
+          allowances: 1,
+          overtimeRate: 1,
+          overtimeHours: 1,
+          netSalary: {
+            $sum: [
+              "$salary",
+              "$allowances",
+              {
+                $multiply: ["$overtimeRate", "$overtimeHours"],
+              },
+            ],
+          },
+          status: "pending",
+          dateOfGeneration: new Date(),
+          month: firstDayOfMonth,
+          employeeName: "$fullName",
+        },
+      },
+    ]);
 
-//         // Save the newly generated payroll to the database
-//         // await Payroll.create(payrollEntry);
-//       } else {
-//         // Payroll for the current month already exists, add it to the response data
-//         payrollData.push(existingPayroll);
-//       }
-//     }
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Payroll generated successfully",
+        data: payrollRecords,
+      }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error);
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: error.message,
+      }),
+      { status: 500 }
+    );
+  }
+};
 
-//     return new Response(
-//       JSON.stringify({
-//         success: true,
-//         message: "Payroll data retrieved successfully",
-//         data: payrollData,
-//       }),
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.log(error);
-//     return new Response(
-//       JSON.stringify({
-//         success: false,
-//         message: error.message,
-//       }),
-//       { status: 500 }
-//     );
-//   }
-// };
+export const POST = async (req) => {
+  const payrollRecords = await req.json();
 
-// // Helper function to calculate overtime hours for an employee
-// const calculateOvertimeHours = async (employee, currentMonth) => {
-//   // Find all attendance records for the employee in the current month
-//   const attendanceRecords = await Attendance.find({
-//     employee: employee._id,
-//     date: { $gte: currentMonth },
-//   });
+  try {
+    await connectToDB();
 
-//   // Calculate total overtime hours
-//   let totalOvertimeHours = 0;
-//   for (const record of attendanceRecords) {
-//     // Calculate hours worked for each attendance record (assuming checkInTime and checkOutTime are valid Date objects)
-//     const hoursWorked =
-//       (record.checkOutTime - record.checkInTime) / (1000 * 60 * 60);
+    const savedPayrollRecords = await Payroll.insertMany(payrollRecords);
 
-//     // Consider all hours worked beyond 8 hours as overtime
-//     const overtimeHours = Math.max(hoursWorked - 8, 0);
-//     totalOvertimeHours += overtimeHours;
-//   }
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Payroll records saved successfully",
+        data: savedPayrollRecords,
+      }),
+      { status: 201 }
+    );
+  } catch (error) {
+    console.log(error);
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: error.message,
+      }),
+      { status: 500 }
+    );
+  }
+};
 
-//   return totalOvertimeHours;
-// };
+export const DELETE = async (req) => {
+  try {
+    await connectToDB();
 
-// export const POST = async (req) => {
-//   try {
-//     const { employeeId } = await req.json();
-//     if (!employeeId) {
-//       return new Response(
-//         JSON.stringify({
-//           success: false,
-//           message: "Employee ID is required.",
-//         }),
-//         { status: 400 }
-//       );
-//     }
+    const { recordIds } = req.body;
 
-//     await connectToDB();
+    if (!Array.isArray(recordIds) || recordIds.length === 0) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Invalid or empty recordIds array provided.",
+        }),
+        { status: 400 }
+      );
+    }
 
-//     // Update the status of the payroll entry for the current month to "approved"
-//     const currentMonth = new Date();
-//     currentMonth.setDate(1); // Set the date to the first day of the month
-//     await Payroll.updateOne(
-//       { employee: employeeId, payPeriodStart: { $gte: currentMonth } },
-//       { $set: { status: "approved" } }
-//     );
+    const result = await Payroll.deleteMany({ _id: { $in: recordIds } });
 
-//     return new Response(
-//       JSON.stringify({
-//         success: true,
-//         message: "Payroll approved successfully",
-//       }),
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.log(error);
-//     return new Response(
-//       JSON.stringify({
-//         success: false,
-//         message: error.message,
-//       }),
-//       { status: 500 }
-//     );
-//   }
-// };
-
-// // Add your payroll calculation functions here
-// async function calculateOvertimeData(employee, payPeriodStart, payPeriodEnd) {
-//   // Fetch the Attendance records for the given employee and pay period
-//   const attendanceRecords = await Attendance.find({
-//     employee: employee._id,
-//     date: { $gte: payPeriodStart, $lte: payPeriodEnd },
-//   });
-
-//   let overtimeHours = 0;
-
-//   // Calculate the total overtime hours based on business logic (e.g., work hours per day)
-//   for (const record of attendanceRecords) {
-//     // Add your logic to calculate overtime hours based on check-in and check-out times
-//     // For example:
-//     if (record.checkOutTime && record.checkInTime) {
-//       const timeDiffInHours =
-//         Math.abs(record.checkOutTime - record.checkInTime) / 3600000; // Convert milliseconds to hours
-//       if (timeDiffInHours > 8) {
-//         overtimeHours += timeDiffInHours - 8;
-//       }
-//     }
-//   }
-
-//   // Calculate overtime rate based on business logic (e.g., hourly rate for overtime)
-//   const overtimeRate = 20; // Replace with your business logic to determine the rate
-
-//   return { overtimeHours, overtimeRate };
-// }
-
-// async function calculateGrossSalary(employee, payPeriodStart, payPeriodEnd) {
-//   const { overtimeHours, overtimeRate } = await calculateOvertimeData(
-//     employee,
-//     payPeriodStart,
-//     payPeriodEnd
-//   );
-
-//   // Calculate gross salary based on the basic salary and overtime pay
-//   const overtimePay = overtimeHours * overtimeRate;
-//   const grossSalary = employee.salary + overtimePay;
-//   return grossSalary;
-// }
-
-// async function calculateDeductions(employee) {
-//   // Example: Deduct 5% of the gross salary as tax
-//   const taxRate = 0.05;
-//   const grossSalary = await calculateGrossSalary(employee);
-//   const deductions = grossSalary * taxRate;
-//   return deductions;
-// }
-
-// function calculateAllowances(employee) {
-//   console.log(
-//     "🚀 ~ file: route.js:203 ~ calculateAllowances ~ employee:",
-//     employee
-//   );
-//   // Example: Allowances are fixed at 1000 for all employees
-//   return 1000;
-// }
-
-// async function calculateNetSalary(employee) {
-//   // Calculate net salary based on the gross salary and deductions
-//   const grossSalary = await calculateGrossSalary(employee);
-//   const deductions = await calculateDeductions(employee);
-//   const allowances = calculateAllowances(employee);
-//   const netSalary = grossSalary - deductions + allowances;
-//   return netSalary;
-// }
+    if (result.deletedCount > 0) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: `Deleted ${result.deletedCount} payroll records.`,
+        }),
+        { status: 200 }
+      );
+    } else {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "No matching payroll records found for deletion.",
+        }),
+        { status: 404 }
+      );
+    }
+  } catch (error) {
+    console.error(error);
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: error.message,
+      }),
+      { status: 500 }
+    );
+  }
+};

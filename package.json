@@ -18,7 +18,7 @@
     "googleapis": "^126.0.1",
     "mongodb": "^5.7.0",
     "mongoose": "^7.3.2",
-    "next": "^13.5.4",
+    "next": "^13.5.6",
     "next-auth": "^4.22.3",
     "pino": "^8.15.0",
     "postcss": "8.4.25",

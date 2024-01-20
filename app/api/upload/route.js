@@ -1,77 +1,94 @@
 // /api/upload
-
+import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
 import Employee from "../../../models/employee";
 import User from "../../../models/user";
 import { connectToDB } from "../../../utils/database";
 
+cloudinary.config({
+  api_key: process.env.CLOUDINARY_API_KEY,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 export async function POST(request) {
   const formData = await request.formData();
+  formData.append("upload_preset", "hr-management");
 
   const email = formData.get("email");
   const file = formData.get("file");
 
-  const newFormData = new FormData();
-  newFormData.append("uploadKey", process.env.UPLOAD_KEY);
-  newFormData.append("file", file);
-
   if (!file) {
     return NextResponse.json({ success: false });
   }
+  // Upload the image to Cloudinary
+  try {
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    const imageUrl = data.secure_url;
 
-  const response = await fetch(
-    "https://google-drive-upload.onrender.com/upload",
-    {
-      method: "POST",
-      body: newFormData,
-    }
-  );
+    await connectToDB();
 
-  const fileData = await response.json();
-  console.log(fileData);
+    // let user =
+    // (await User.findOne({ email: email })) ||
+    // (await Employee.findOne({ email: email }));
+    
+    // console.log("🚀 ~ POST ~ user:", user)
 
-  if (!fileData.success) {
-    return new Error("Failed to upload file");
+    // if (user) {
+    //   user.image = imageUrl;
+    //   user.save();
+    // }
+
+    await User.updateOne({email}, {image:imageUrl}, {new:true})
+    
+    await Employee.updateOne({email}, {image:imageUrl}, {new:true})
+
+    return NextResponse.json({ success: true, url: imageUrl, imageUrl });
+  } catch (error) {
+    console.error("Error uploading image to Cloudinary:", error);
+    return NextResponse.json({
+      success: false,
+      error: "Failed to upload file",
+    });
   }
-
-  await connectToDB();
-
-  let user =
-    (await User.findOne({ email: email })) ||
-    (await Employee.findOne({ email: email }));
-
-  if (user) {
-    user.image = `${fileData.url}`;
-    user.save();
-  }
-
-  return NextResponse.json(fileData);
 }
 
 export async function DELETE(request) {
   const { fileUrl } = await request.json();
 
   const urlParams = new URLSearchParams(new URL(fileUrl).search);
-  const fileId = urlParams.get("id");
+  // const fileId = urlParams.get("id");
 
   try {
-    const response = await fetch(
-      `https://google-drive-upload.onrender.com/delete-file/${fileId}`,
+    // const response = await fetch(
+    //   `https://google-drive-upload.onrender.com/delete-file/${fileId}`,
 
-      {
-        method: "DELETE",
-        body: JSON.stringify({ uploadKey: process.env.UPLOAD_KEY }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    //   {
+    //     method: "DELETE",
+    //     body: JSON.stringify({ uploadKey: process.env.UPLOAD_KEY }),
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   }
+    // );
 
-    const responseData = await response.json();
-    console.log(responseData);
+    const splitUrl = fileUrl.split("/");
+    let fileId =
+      splitUrl[splitUrl.length - 2] + "/" + splitUrl[splitUrl.length - 1];
+    fileId = fileId.split(".")[0];
 
-    return NextResponse.json(responseData);
+    const response = await cloudinary.uploader.destroy(fileId);
+
+    return NextResponse.json({ success: true, data: [] });
   } catch (error) {
+    console.log("🚀 ~ DELETE ~ error:", error);
     return NextResponse.json({
       success: false,
       message: `File removed unsuccessful!`,

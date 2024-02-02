@@ -85,10 +85,10 @@ const EmployeeDashboard = () => {
 
 export default EmployeeDashboard;
 
-const PointsItem = ({ date, points, source }) => (
+const PointsItem = ({ createdAt, points, source }) => (
   <div className="bg-white p-2 grid grid-cols-3 gap-2 items-center mb-1">
     <div className="text-sm font-semibold ">
-      {dayjs(date).format("DD MMM, YYYY")}
+      {dayjs(createdAt).format("DD MMM, YYYY")}
     </div>
     <div className="text-sm ">{points}</div>
     <div className="text-gay-600 text-xs"> {source}</div>

@@ -32,6 +32,12 @@ const TaskSchema = new Schema(
       type: Date,
       required: true,
     },
+    attachment: {
+      type: String,
+    },
+    submittedAttachment:{
+      type: String,
+    },
   },
   { timestamps: true }
 );

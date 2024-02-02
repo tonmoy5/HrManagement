@@ -9,6 +9,7 @@ import TaskList from "../molecules/TaskList";
 
 const TasksPageTemplate = () => {
   const [tasks, setTasks] = useState([]);
+  console.log("🚀 ~ TasksPageTemplate ~ tasks:", tasks);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTask, setSelectedTask] = useState(null);
   const [employees, setEmployees] = useState([]);
@@ -31,6 +32,21 @@ const TasksPageTemplate = () => {
     }
   };
 
+  const fetchTasks = () => {
+    const url =
+      user.role === "admin"
+        ? `/api/tasks`
+        : `/api/tasks?employeeId=${user._id}`;
+    axios
+      .get(url)
+      .then((response) => {
+        setTasks(response.data.data);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   // Fetch employees data when the component mounts
   useEffect(() => {
     fetchEmployees();
@@ -39,14 +55,7 @@ const TasksPageTemplate = () => {
   // Fetch tasks from the API
   useEffect(() => {
     if (user) {
-      const url =
-        user.role === "admin"
-          ? `/api/tasks`
-          : `/api/tasks?employeeId=${user._id}`;
-      axios.get(url).then((response) => {
-        setTasks(response.data.data);
-        setIsLoading(false);
-      });
+      fetchTasks();
     }
   }, [user]);
 
@@ -140,6 +149,7 @@ const TasksPageTemplate = () => {
           onDelete={openDeleteModal}
           onEdit={openEditModal}
           onComplete={markTaskAsComplete}
+          refetch={fetchTasks}
         />
       )}
 

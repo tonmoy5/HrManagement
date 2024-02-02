@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 
 const AddTaskForm = ({ onAdd, employees }) => {
+  const [file, setFile] = useState(null); // [File, File, File]
   const [taskData, setTaskData] = useState({
     employee: "",
     title: "",
@@ -10,6 +11,8 @@ const AddTaskForm = ({ onAdd, employees }) => {
     status: "pending",
     startDate: "",
     endDate: "",
+    attachment: "",
+    submittedAttachment: "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +32,18 @@ const AddTaskForm = ({ onAdd, employees }) => {
     setError(null);
 
     try {
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const fileRes = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const fileData = await fileRes.json();
+        taskData.attachment = fileData.url;
+      }
+
       const response = await axios.post("/api/tasks", taskData);
       const newTask = response.data.data;
       onAdd(newTask);
@@ -37,7 +52,16 @@ const AddTaskForm = ({ onAdd, employees }) => {
       setError("Error adding task. Please try again.");
     } finally {
       setIsLoading(false);
+      setFile(null);
     }
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleRemoveFile = () => {
+    setFile(null);
   };
 
   return (
@@ -198,6 +222,63 @@ const AddTaskForm = ({ onAdd, employees }) => {
           />
         </div>
       </div>
+
+      {file ? (
+        <div className="mb-2">
+          <h3 className="font-bold mb-1">Attachment</h3>
+          <ul>
+            <li className="flex justify-between">
+              <span>{file.name}</span>
+              <span className="text-red-500" onClick={() => handleRemoveFile()}>
+                X
+              </span>
+            </li>
+          </ul>
+        </div>
+      ) : (
+        <div className="mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Attachments
+          </label>
+          <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+            <div className="space-y-1 text-center">
+              <svg
+                className="mx-auto h-12 w-12 text-gray-400"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 48 48"
+                aria-hidden="true"
+              >
+                <path
+                  d="M20 8v20m0 0l-8-8m8 8l8-8m5-4H6a2 2 0 00-2 2v24a2 2 0 002 2h36a2 2 0 002-2V6a2 2 0 00-2-2z"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <div className="flex text-sm text-gray-600">
+                <label
+                  htmlFor="file-upload"
+                  className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring_blue"
+                >
+                  <span>Upload a file</span>
+                  <input
+                    id="file-upload"
+                    name="file-upload"
+                    type="file"
+                    className="sr-only"
+                    onChange={handleFileChange}
+                    multiple
+                  />
+                </label>
+                <p className="pl-1">or drag and drop</p>
+              </div>
+              <p className="text-xs text-gray-500">PNG, JPG, PDF up to 10MB</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {error && <div className="text-red-600 mb-2">{error}</div>}
 
       <div className="flex justify-end">

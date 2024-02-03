@@ -4,9 +4,11 @@ import dayjs from "dayjs";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BsFingerprint } from "react-icons/bs";
 import AttendanceCapture from "../components/molecules/AttendanceCapture";
 import { useUserContext } from "../context/UserContext";
 import Alert from "./Alert";
+import Modal from "./Modal";
 
 const AttendanceForm = ({ employees, setAttendanceData }) => {
   const router = useRouter();
@@ -18,6 +20,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
   const [capturedImage, setCapturedImage] = useState(null);
 
   const [showCamera, setShowCamera] = useState(false);
+  const [fingerPrintModal, setFingerPrintModal] = useState(false);
 
   const handleOpenCamera = () => {
     setShowCamera(true);
@@ -193,6 +196,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
       setIsLoading(false);
       setCapturedImage(null);
       setShowCamera(false);
+      setFingerPrintModal(false);
     }
   };
 
@@ -208,7 +212,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
           />
         )}
       </AnimatePresence>
-      <form onSubmit={handleSubmit}>
+      <form>
         <div className="md:flex gap-10 md:space-y-0 space-y-4">
           <div className="space-y-4 md:w-1/2 w-full order-1">
             <div>
@@ -315,14 +319,44 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
         )}
         <div className="flex justify-end mt-5">
           <button
-            type="submit"
+            type="button"
             className="btn_blue text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isLoading || isOnLeave || !showCamera}
+            onClick={() => setFingerPrintModal(true)}
           >
             {isLoading ? "Loading..." : "Submit"}
           </button>
         </div>
       </form>
+
+      <Modal
+        isOpen={fingerPrintModal}
+        onClose={() => setFingerPrintModal(false)}
+        title="Input Fingerprint"
+      >
+        {/* {selectedEmployeeId && (
+          <EmployeeDetails employeeId={selectedEmployeeId} />
+        )} */}
+
+        <BsFingerprint className="text-3xl" />
+
+        <div className="flex justify-end mt-5 gap-4">
+          <button
+            type="button"
+            className="btn_danger text-sm"
+            onClick={() => setFingerPrintModal(false)}
+          >
+            Close
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="btn_blue text-sm disabled:opacity-60"
+            disabled={isLoading}
+          >
+            {isLoading ? "Submitted" : "Submit"}
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };

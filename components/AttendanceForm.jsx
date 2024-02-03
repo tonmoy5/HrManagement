@@ -338,7 +338,7 @@ const AttendanceForm = ({ employees, setAttendanceData }) => {
           <EmployeeDetails employeeId={selectedEmployeeId} />
         )} */}
 
-        <BsFingerprint className="text-3xl" />
+        <BsFingerprint className="text-6xl" />
 
         <div className="flex justify-end mt-5 gap-4">
           <button

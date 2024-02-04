@@ -21,7 +21,7 @@
     "googleapis": "^126.0.1",
     "lucide-react": "^0.321.0",
     "mongodb": "^5.7.0",
-    "mongoose": "^7.3.2",
+    "mongoose": "^7.6.7",
     "next": "^13.5.4",
     "next-auth": "^4.22.3",
     "pino": "^8.15.0",

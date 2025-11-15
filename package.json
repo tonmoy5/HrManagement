@@ -14,7 +14,7 @@
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.3.3",
     "class-variance-authority": "^0.7.0",
-    "cloudinary": "^1.41.3",
+    "cloudinary": "^2.7.0",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
     "framer-motion": "^10.12.21",
